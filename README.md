@@ -1,4 +1,4 @@
-# 🚀 Node.js Hexagonal Backend: SDD Constitution
+# Node.js Hexagonal Backend: SDD Constitution
 
 This project is built following the **Specification-Driven Development (SDD)** paradigm. It utilizes a strict **Hexagonal Architecture** to ensure the business logic remains isolated, testable, and independent of external technologies.
 
@@ -14,38 +14,43 @@ This project is built following the **Specification-Driven Development (SDD)** p
 
 ---
 
-## 🏗 Architectural Layers
+## 🏗 Architectural Layers - Hexagonal Architecture
 
 Following the Hexagonal pattern, the code is divided into three distinct layers to manage dependencies effectively:
 
-### 1. Domain Layer (`src/Domain`)
+### 1. Domain Layer (`src/domain`)
 The core of the system. It contains the business rules, Entities, Value Objects, and Domain Exceptions.
 - **Rules:** Zero dependencies. It defines "Ports" (Interfaces) for repositories or external services.
 
-### 2. Application Layer (`src/Application`)
+### 2. Application Layer (`src/application`)
 Coordinates the execution of business logic. It contains the **Use Cases**.
 - **Rules:** Depends only on the Domain. It orchestrates how data flows without knowing about HTTP or Databases.
 
-### 3. Infrastructure Layer (`src/Infrastructure`)
+### 3. Infrastructure Layer (`src/infrastructure`)
 Contains the "Adapters" (technological implementations).
 - **Primary Adapters:** Entry points like Express controllers or CLI commands.
 - **Secondary Adapters:** Implementations of Domain interfaces (e.g., PostgreSQL Repositories, Stripe API clients).
 
 ---
 
-## 📝 Specification-Driven Development (SDD)
+## 📝 Specification Driven Development (SDD)
 
-We use the `/specs` folder as the **Source of Truth**. Before writing any code, the behavior is defined here using **spec-kit**.
+We use the `/specs` folder as the **Source of Truth** for IA and Developer. Before writing any code, the behavior is defined here using **spec-kit**.
+
+In `.specify/memory` folder we have the file constitution.md which is a structured document that defines the core values, behaviors, and safety boundaries for an AI model.
 
 ### The `/specs` Folder Structure
-- **`specs/features/`**: Contains the Gherkin files (`.feature`) describing the system behavior.
-- **`specs/constitution.md`**: Defines the project's architectural constraints and coding standards.
 - **`specs/requirements/`**: Detailed documentation generated or managed via `spec-kit`.
 
-> **Workflow:** > 1. Write the requirement in `/specs/features`.
-> 2. Run `spec-kit` to validate/generate documentation.
-> 3. Implement the failing test in `features/step_definitions`.
-> 4. Code the logic in `src/` to satisfy the specification.
+---
+## 📜 BusinessDriven Development (BDD)
+
+We use the `/acceptance-test` folder as the **Source of Truth** for Business and Developer. Before writing any code, the behavior is defined here using the specfic feature file.
+
+### The `/acceptance-test` Folder Structure
+- **`acceptance-test/features/`**: Contains the Gherkin files (`.feature`) describing the system behavior.
+- **`acceptance-test/step_definitions/`**: Implementation of a gherkin behaviours.
+
 
 ---
 
@@ -53,22 +58,48 @@ We use the `/specs` folder as the **Source of Truth**. Before writing any code, 
 
 ```text
 .
-├── specs/                 # SDD: Living documentation & Gherkin source
-│   ├── features/          # .feature files (User Stories)
-│   └── constitution.md    # Project Standards & Architectural Rules
+├── .specify/                    # SDD: Living documentation
+│   ├── features/               # .feature files (User Stories)
+|   |  ├── spec.md              # Feature specification
+│   |  ├── plan.md              # Implementation plan
+│   |  ├── research.md          # Technical research
+│   |  ├── data-model.md        # Domain model
+│   |  ├── quickstart.md        # Developer guide
+│   |  ├── tasks.md             # 
+│   |  └── contracts/
+|   |       └── openapi.yaml    # API contract
+│   └── memory/
+|       └── constitution.md     # Project Standards & Architectural Rules
+├── scripts/
+|   ├── build.sh                # build docker image for a project
+|   └── run-acceptance-test.sh  # execute Gherkin docker image
 ├── src/
-│   ├── Domain/            # Business Logic & Repository Interfaces (Ports)
-│   ├── Application/       # Use Cases (Interactors)
-│   └── Infrastructure/    # Adapters (Express, DB, External Clients)
-├── features/
-│   ├── step_definitions/  # Cucumber implementations (E2E with Supertest)
-│   └── support/           # Cucumber hooks and World context
+│   ├── domain/                 # Business Logic & Repository Interfaces (Ports)
+│   ├── application/            # Use Cases (Interactors)
+│   └── infrastructure/         # Adapters (Express, DB, External Clients)
+├── acceptance-test/
+|   ├── features/               # Gherkin information
+│   ├── step_definitions/       # Cucumber implementations (E2E with Supertest)
+│   ├── support/                # Cucumber hooks and World context
+|   |   └── cucumber.js         # Cucumber-js configuration
+|   └── docker-compose.yaml     # Infraestructure
 ├── tests/
-│   └── Unit/              # TDD: Logic testing for Domain/Application
-├── .prettierrc            # Code formatting standards
-├── cucumber.js            # Cucumber-js configuration
-└── tsconfig.json          # TypeScript strict configuration
+│   ├── application/            # TDD: Logic testing for application
+│   └── domain/                 # TDD: Logic testing for domain
+├── .prettierrc                 # Code formatting standards
+└── tsconfig.json               # TypeScript strict configuration
 ```
+---
+## 💻 Workflow to development
+
+1. Write the requirement in `/specs/features`.
+2. Run `spec-kit` to validate/generate documentation.
+3. Implement the failing test e2e in `acceptance-test/`.
+4. Implement the failing test unit in `tests/`
+5. Code the logic in `src/` to satisfy the specification.
+
+---
+
 
 # 🚀 Getting Started: Development Guide
 
@@ -105,13 +136,13 @@ pnpm run test:unit
 ### Acceptance Testing (BDD)
 Focused on the Infrastructure layer using Cucumber and Supertest. These tests verify the specifications defined in the /specs folder.
 ```bash
-pnpm run test:e2e
+scripts/build.sh && scripts/run-acceptance-test.sh
 ```
 
 ### Full Test Report
 Run the entire suite to ensure no regressions:
 ```bash
-pnpm run test
+scripts/build.sh && scripts/run-all-test.sh
 ```
 
 ## 3. ✨ Code Quality & Standards
