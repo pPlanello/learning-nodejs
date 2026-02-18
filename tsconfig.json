@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "CommonJS",
+    "lib": ["ES2021"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@Domain/*": ["src/Domain/*"],
+      "@Application/*": ["src/Application/*"],
+      "@Infrastructure/*": ["src/Infrastructure/*"]
+    },
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*.ts", "features/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["node_modules"]
+}
