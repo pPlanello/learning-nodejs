@@ -6,7 +6,6 @@ import { type ILogger } from '@Domain/common/logger.port'
 import { type IUserRepository } from '@Domain/user/ports/user.repository.port'
 import { AppDataSource } from '@Infrastructure/config/database.config'
 import { PinoLoggerAdapter } from '@Infrastructure/adapters/pino-logger.adapter'
-import { InMemoryUserRepository } from '@Infrastructure/secondary/repositories/in-memory-user.repository'
 
 import { errorHandlerMiddleware } from './middleware/error-handler.middleware'
 import { requestLoggerMiddleware } from './middleware/request-logger.middleware'
@@ -33,20 +32,11 @@ const buildApp = (dependencies: BuildAppDependencies = {}): express.Express => {
 }
 
 const start = async (): Promise<void> => {
-  const useInMemoryRepository = process.env.USE_IN_MEMORY_REPOSITORY === 'true'
-
-  if (!useInMemoryRepository && !AppDataSource.isInitialized) {
+  if (!AppDataSource.isInitialized) {
     await AppDataSource.initialize()
   }
 
-  const dependencies = useInMemoryRepository
-    ? {
-        userRepository: new InMemoryUserRepository(),
-        logger: new PinoLoggerAdapter(),
-      }
-    : {}
-
-  const app = buildApp(dependencies)
+  const app = buildApp({ logger: new PinoLoggerAdapter() })
   const port = Number(process.env.PORT ?? 3000)
 
   app.listen(port)

@@ -9,7 +9,7 @@
     "start": "node dist/infrastructure/primary/server.js",
     "test": "pnpm run test:unit && pnpm run test:e2e",
     "test:unit": "node scripts/run-jest-unit.cjs",
-    "test:e2e": "DATABASE_URL=postgresql://local:test@localhost:5432/testdb cucumber-js --config tests/acceptance/cucumber.js",
+    "test:e2e": "node scripts/run-e2e.cjs",
     "specs:generate": "spec-kit generate ./specs",
     "format": "prettier --write \"{src,tests,specs}/**/*.ts\"",
     "format:check": "prettier --check \"{src,tests,specs}/**/*.ts\"",

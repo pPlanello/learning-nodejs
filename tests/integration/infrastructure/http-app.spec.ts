@@ -1,6 +1,12 @@
 import request from 'supertest'
 
-import { InMemoryUserRepository } from '@Infrastructure/secondary/repositories/in-memory-user.repository'
+import {
+  type FindAllUsersOptions,
+  type IUserRepository,
+} from '@Domain/user/ports/user.repository.port'
+import { Email } from '@Domain/user/value-objects/email.value-object'
+import { type UserId } from '@Domain/user/value-objects/user-id.value-object'
+import { type User } from '@Domain/user/user.entity'
 
 process.env.DATABASE_URL =
   process.env.DATABASE_URL ?? 'postgresql://local:test@localhost:5432/testdb'
@@ -8,9 +14,48 @@ process.env.DATABASE_URL =
 const { PinoLoggerAdapter } = require('@Infrastructure/adapters/pino-logger.adapter')
 const { buildApp } = require('@Infrastructure/primary/server')
 
+class TestUserRepository implements IUserRepository {
+  private readonly usersById = new Map<string, User>()
+
+  public async create(user: User): Promise<User> {
+    this.usersById.set(user.id.toString(), user)
+    return user
+  }
+
+  public async findById(id: UserId): Promise<User | null> {
+    return this.usersById.get(id.toString()) ?? null
+  }
+
+  public async findByEmail(email: Email): Promise<User | null> {
+    for (const user of this.usersById.values()) {
+      if (user.email.toString() === email.toString()) {
+        return user
+      }
+    }
+
+    return null
+  }
+
+  public async findAll(options: FindAllUsersOptions): Promise<{ data: User[]; total: number }> {
+    const users = [...this.usersById.values()].filter((user) => user.deletedAt === null)
+    const offset = (options.page - 1) * options.limit
+    const data = users.slice(offset, offset + options.limit)
+
+    return {
+      data,
+      total: users.length,
+    }
+  }
+
+  public async update(user: User): Promise<User> {
+    this.usersById.set(user.id.toString(), user)
+    return user
+  }
+}
+
 describe('HTTP app infrastructure', () => {
   const app = buildApp({
-    userRepository: new InMemoryUserRepository(),
+    userRepository: new TestUserRepository(),
     logger: new PinoLoggerAdapter(),
   })
 

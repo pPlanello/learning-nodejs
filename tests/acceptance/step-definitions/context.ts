@@ -1,8 +1,8 @@
 import request, { type Response } from 'supertest'
 
 import { PinoLoggerAdapter } from '@Infrastructure/adapters/pino-logger.adapter'
+import { AppDataSource } from '@Infrastructure/config/database.config'
 import { buildApp } from '@Infrastructure/primary/server'
-import { InMemoryUserRepository } from '@Infrastructure/secondary/repositories/in-memory-user.repository'
 
 export interface AcceptanceState {
   app?: ReturnType<typeof buildApp>
@@ -17,12 +17,24 @@ export interface AcceptanceState {
 
 export const state: AcceptanceState = {}
 
-let inMemoryUserRepository = new InMemoryUserRepository()
+export const initializeAcceptanceDatabase = async (): Promise<void> => {
+  if (!AppDataSource.isInitialized) {
+    await AppDataSource.initialize()
+  }
+}
+
+export const clearAcceptanceDatabase = async (): Promise<void> => {
+  await AppDataSource.query('TRUNCATE TABLE users RESTART IDENTITY CASCADE')
+}
+
+export const closeAcceptanceDatabase = async (): Promise<void> => {
+  if (AppDataSource.isInitialized) {
+    await AppDataSource.destroy()
+  }
+}
 
 export const resetAcceptanceContext = (): void => {
-  inMemoryUserRepository = new InMemoryUserRepository()
   state.app = buildApp({
-    userRepository: inMemoryUserRepository,
     logger: new PinoLoggerAdapter(),
   })
   state.response = undefined
@@ -37,7 +49,6 @@ export const resetAcceptanceContext = (): void => {
 export const ensureApp = (): ReturnType<typeof buildApp> => {
   if (state.app === undefined) {
     state.app = buildApp({
-      userRepository: inMemoryUserRepository,
       logger: new PinoLoggerAdapter(),
     })
   }

@@ -1,7 +1,18 @@
-import { Before } from '@cucumber/cucumber'
+import { AfterAll, Before } from '@cucumber/cucumber'
 
-import { resetAcceptanceContext } from './context'
+import {
+  clearAcceptanceDatabase,
+  closeAcceptanceDatabase,
+  initializeAcceptanceDatabase,
+  resetAcceptanceContext,
+} from './context'
 
-Before(() => {
+Before(async () => {
+  await initializeAcceptanceDatabase()
+  await clearAcceptanceDatabase()
   resetAcceptanceContext()
+})
+
+AfterAll(async () => {
+  await closeAcceptanceDatabase()
 })
