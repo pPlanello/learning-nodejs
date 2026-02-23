@@ -8,7 +8,7 @@ import {
   GetAllUsersController,
   GetUserController,
   UpdateUserController,
-} from '@Infrastructure/primary/controllers/user.controllers'
+} from '@Infrastructure/primary/controllers/user.controller'
 import { BadRequestException } from '@Infrastructure/primary/exceptions/bad-request.exception'
 
 const createUserEntity = () =>
