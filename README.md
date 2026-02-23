@@ -14,6 +14,58 @@ This project is built following the **Specification-Driven Development (SDD)** p
 
 ---
 
+## ⚡ Current Setup / Run / Test Commands
+
+### Setup
+
+```bash
+pnpm install
+```
+
+Create `.env` with at least:
+
+```env
+DATABASE_URL=postgresql://local:test@localhost:5432/testdb
+PORT=3000
+LOG_LEVEL=info
+```
+
+### Run
+
+```bash
+pnpm run dev
+```
+
+### Build & Start
+
+```bash
+pnpm run build
+pnpm run start
+```
+
+### Tests
+
+```bash
+pnpm run test
+pnpm run test:unit
+pnpm run test:e2e
+```
+
+### Quality
+
+```bash
+pnpm run lint
+pnpm run format:check
+pnpm exec tsc --noEmit
+```
+
+### API Docs
+
+- Swagger UI: `http://localhost:3000/api-docs`
+- OpenAPI JSON: `http://localhost:3000/api-docs/openapi.json`
+
+---
+
 ## 🏗 Architectural Layers - Hexagonal Architecture
 
 Following the Hexagonal pattern, the code is divided into three distinct layers to manage dependencies effectively:
@@ -45,11 +97,11 @@ In `.specify/memory` folder we have the file constitution.md which is a structur
 ---
 ## 📜 BusinessDriven Development (BDD)
 
-We use the `/acceptance-test` folder as the **Source of Truth** for Business and Developer. Before writing any code, the behavior is defined here using the specfic feature file.
+We use the `/tests/acceptance` folder as the **Source of Truth** for Business and Developer. Before writing any code, the behavior is defined here using the specific feature files.
 
-### The `/acceptance-test` Folder Structure
-- **`acceptance-test/features/`**: Contains the Gherkin files (`.feature`) describing the system behavior.
-- **`acceptance-test/step_definitions/`**: Implementation of a gherkin behaviours.
+### The `/tests/acceptance` Folder Structure
+- **`tests/acceptance/features/`**: Contains the Gherkin files (`.feature`) describing the system behavior.
+- **`tests/acceptance/step-definitions/`**: Implementation of Gherkin behaviors.
 
 
 ---
@@ -77,15 +129,12 @@ We use the `/acceptance-test` folder as the **Source of Truth** for Business and
 │   ├── domain/                 # Business Logic & Repository Interfaces (Ports)
 │   ├── application/            # Use Cases (Interactors)
 │   └── infrastructure/         # Adapters (Express, DB, External Clients)
-├── acceptance-test/
-|   ├── features/               # Gherkin information
-│   ├── step_definitions/       # Cucumber implementations (E2E with Supertest)
-│   ├── support/                # Cucumber hooks and World context
-|   |   └── cucumber.js         # Cucumber-js configuration
-|   └── docker-compose.yaml     # Infraestructure
 ├── tests/
-│   ├── application/            # TDD: Logic testing for application
-│   └── domain/                 # TDD: Logic testing for domain
+|   ├── acceptance/
+|   |   ├── features/           # Gherkin scenarios
+|   |   └── step-definitions/   # Cucumber implementations (E2E with Supertest)
+|   ├── application/            # TDD: Logic testing for application
+|   └── domain/                 # TDD: Logic testing for domain
 ├── .prettierrc                 # Code formatting standards
 └── tsconfig.json               # TypeScript strict configuration
 ```
@@ -94,7 +143,7 @@ We use the `/acceptance-test` folder as the **Source of Truth** for Business and
 
 1. Write the requirement in `/specs/features`.
 2. Run `spec-kit` to validate/generate documentation.
-3. Implement the failing test e2e in `acceptance-test/`.
+3. Implement the failing test e2e in `tests/acceptance/`.
 4. Implement the failing test unit in `tests/`
 5. Code the logic in `src/` to satisfy the specification.
 

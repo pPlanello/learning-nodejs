@@ -128,19 +128,19 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 
 ### Database Adapter
 
-- [ ] T038 Create UserDatabaseEntity TypeORM entity in src/Infrastructure/Persistence/entities/user.database-entity.ts
-- [ ] T039 Create TypeORMUserRepository implementation in src/Infrastructure/Secondary/repositories/typeorm-user.repository.ts
-- [ ] T040 [P] Write integration tests for TypeORMUserRepository in tests/integration/repositories/typeorm-user.repository.spec.ts
+- [x] T038 Create UserDatabaseEntity TypeORM entity in src/Infrastructure/Persistence/entities/user.database-entity.ts
+- [x] T039 Create TypeORMUserRepository implementation in src/Infrastructure/Secondary/repositories/typeorm-user.repository.ts
+- [x] T040 [P] Write integration tests for TypeORMUserRepository in tests/integration/repositories/typeorm-user.repository.spec.ts
 
 ### HTTP Infrastructure
 
-- [ ] T041 [P] Create error-handler middleware in src/Infrastructure/Primary/middleware/error-handler.middleware.ts (map domain exceptions to HTTP)
-- [ ] T042 [P] Create trace-id middleware in src/Infrastructure/Primary/middleware/trace-id.middleware.ts
-- [ ] T043 [P] Create request-logger middleware in src/Infrastructure/Primary/middleware/request-logger.middleware.ts with Pino integration
+- [x] T041 [P] Create error-handler middleware in src/Infrastructure/Primary/middleware/error-handler.middleware.ts (map domain exceptions to HTTP)
+- [x] T042 [P] Create trace-id middleware in src/Infrastructure/Primary/middleware/trace-id.middleware.ts
+- [x] T043 [P] Create request-logger middleware in src/Infrastructure/Primary/middleware/request-logger.middleware.ts with Pino integration
 
 ### Pino Adapter
 
-- [ ] T044 Create PinoLoggerAdapter in src/Infrastructure/Adapters/pino-logger.adapter.ts implementing ILogger port
+- [x] T044 Create PinoLoggerAdapter in src/Infrastructure/Adapters/pino-logger.adapter.ts implementing ILogger port
 
 ---
 
@@ -148,24 +148,24 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 
 ### Feature Definition
 
-- [ ] T045 [US1] Write Gherkin feature for create user in features/user-crud.feature (all 4 acceptance scenarios)
-- [ ] T046 [US1] Implement step definitions for create user in features/step-definitions/user-crud.steps.ts using Supertest
+- [x] T045 [US1] Write Gherkin feature for create user in tests/acceptance/features/user-crud.feature (all 4 acceptance scenarios)
+- [x] T046 [US1] Implement step definitions for create user in tests/acceptance/step-definitions/user-crud.steps.ts using Supertest
 
 ### Controllers & Routing
 
-- [ ] T047 [US1] Create CreateUserController in src/Infrastructure/Primary/controllers/user/create-user.controller.ts with OpenAPI JSDoc
-- [ ] T048 [US1] Create user routes in src/Infrastructure/Primary/routes/user/user.routes.ts (POST /users)
-- [ ] T049 [US1] [P] Write acceptance test execution for create user scenario (Cucumber step with HTTP assertions)
+- [x] T047 [US1] Create CreateUserController in src/Infrastructure/Primary/controllers/user/user.controllers.ts with OpenAPI JSDoc
+- [x] T048 [US1] Create user routes in src/Infrastructure/Primary/routes/user/user.routes.ts (POST /users)
+- [x] T049 [US1] [P] Write acceptance test execution for create user scenario (Cucumber step with HTTP assertions)
 
 ### Validation & Error Handling
 
-- [ ] T050 [US1] [P] Create input validation DTO for CreateUserRequest with class-validator decorators in src/Application/User/DTOs/
+- [x] T050 [US1] [P] Create input validation DTO for CreateUserRequest with class-validator decorators in src/Application/User/DTOs/
 
 ### Integration & Testing
 
-- [ ] T051 [US1] Run acceptance tests for create user (Gherkin scenarios should pass)
-- [ ] T052 [US1] Verify 100% unit test coverage for CreateUserUseCase
-- [ ] T053 [US1] Manual HTTP test: curl POST /users with valid data, verify 201 + user ID in response
+- [x] T051 [US1] Run acceptance tests for create user (Gherkin scenarios should pass)
+- [x] T052 [US1] Verify 100% unit test coverage for CreateUserUseCase
+- [x] T053 [US1] Manual HTTP test: curl POST /users with valid data, verify 201 + user ID in response
 
 ---
 
@@ -173,21 +173,21 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 
 ### Feature Definition
 
-- [ ] T054 [US2] Write Gherkin feature for get user in features/user-crud.feature (all 4 acceptance scenarios)
-- [ ] T055 [US2] Implement step definitions for get user in features/step-definitions/user-crud.steps.ts
+- [x] T054 [US2] Write Gherkin feature for get user in tests/acceptance/features/user-crud.feature (all 4 acceptance scenarios)
+- [x] T055 [US2] Implement step definitions for get user in tests/acceptance/step-definitions/user-crud.steps.ts
 
 ### Controllers & Routing
 
-- [ ] T056 [US2] Create GetUserController in src/Infrastructure/Primary/controllers/user/get-user.controller.ts with OpenAPI JSDoc
-- [ ] T057 [US2] Add GET /users/{id} route in src/Infrastructure/Primary/routes/user/user.routes.ts
-- [ ] T058 [US2] [P] Write acceptance test execution for get user scenario
+- [x] T056 [US2] Create GetUserController in src/Infrastructure/Primary/controllers/user/user.controllers.ts with OpenAPI JSDoc
+- [x] T057 [US2] Add GET /users/{id} route in src/Infrastructure/Primary/routes/user/user.routes.ts
+- [x] T058 [US2] [P] Write acceptance test execution for get user scenario
 
 ### Testing
 
-- [ ] T059 [US2] Run acceptance tests for get user (all scenarios should pass)
-- [ ] T060 [US2] Verify 100% unit test coverage for GetUserUseCase
-- [ ] T061 [US2] Verify 404 response for non-existent user via manual HTTP test
-- [ ] T062 [US2] Verify no password_hash in response schema
+- [x] T059 [US2] Run acceptance tests for get user (all scenarios should pass)
+- [x] T060 [US2] Verify 100% unit test coverage for GetUserUseCase
+- [x] T061 [US2] Verify 404 response for non-existent user via manual HTTP test
+- [x] T062 [US2] Verify no password_hash in response schema
 
 ---
 
@@ -195,26 +195,26 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 
 ### Feature Definition
 
-- [ ] T063 [US3] Write Gherkin feature for get all users in features/user-crud.feature (all 4 acceptance scenarios with pagination)
-- [ ] T064 [US3] Implement step definitions for get all users in features/step-definitions/user-crud.steps.ts
+- [x] T063 [US3] Write Gherkin feature for get all users in tests/acceptance/features/user-crud.feature (all 4 acceptance scenarios with pagination)
+- [x] T064 [US3] Implement step definitions for get all users in tests/acceptance/step-definitions/user-crud.steps.ts
 
 ### Controllers & Routing
 
-- [ ] T065 [US3] Create GetAllUsersController in src/Infrastructure/Primary/controllers/user/get-all-users.controller.ts with pagination parameters
-- [ ] T066 [US3] Add GET /users route with query parameters (page, limit, sort, filter) in src/Infrastructure/Primary/routes/user/user.routes.ts
-- [ ] T067 [US3] [P] Write acceptance test execution for get all users scenario with pagination
+- [x] T065 [US3] Create GetAllUsersController in src/Infrastructure/Primary/controllers/user/user.controllers.ts with pagination parameters
+- [x] T066 [US3] Add GET /users route with query parameters (page, limit, sort, filter) in src/Infrastructure/Primary/routes/user/user.routes.ts
+- [x] T067 [US3] [P] Write acceptance test execution for get all users scenario with pagination
 
 ### Validation & Query Building
 
-- [ ] T068 [US3] Implement pagination logic in GetAllUsersUseCase (calculate offset, validate limits)
-- [ ] T069 [US3] [P] Implement filter/sort logic in repository query builder (deleted_at IS NULL, status, createdAt range)
+- [x] T068 [US3] Implement pagination logic in GetAllUsersUseCase (calculate offset, validate limits)
+- [x] T069 [US3] [P] Implement filter/sort logic in repository query builder (deleted_at IS NULL, status, createdAt range)
 
 ### Testing
 
-- [ ] T070 [US3] Run acceptance tests for get all users (pagination metadata correct, filtering works)
-- [ ] T071 [US3] Verify 100% unit test coverage for GetAllUsersUseCase
-- [ ] T072 [US3] Manual HTTP test: curl GET /users?page=1&limit=10, verify pagination metadata (total, page, limit, totalPages)
-- [ ] T073 [US3] Manual HTTP test: Verify soft-deleted users excluded from list (deleted_at IS NULL filter)
+- [x] T070 [US3] Run acceptance tests for get all users (pagination metadata correct, filtering works)
+- [x] T071 [US3] Verify 100% unit test coverage for GetAllUsersUseCase
+- [x] T072 [US3] Manual HTTP test: curl GET /users?page=1&limit=10, verify pagination metadata (total, page, limit, totalPages)
+- [x] T073 [US3] Manual HTTP test: Verify soft-deleted users excluded from list (deleted_at IS NULL filter)
 
 ---
 
@@ -222,25 +222,25 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 
 ### Feature Definition
 
-- [ ] T074 [US4] Write Gherkin feature for update user in features/user-crud.feature (all 4 acceptance scenarios)
-- [ ] T075 [US4] Implement step definitions for update user in features/step-definitions/user-crud.steps.ts
+- [x] T074 [US4] Write Gherkin feature for update user in tests/acceptance/features/user-crud.feature (all 4 acceptance scenarios)
+- [x] T075 [US4] Implement step definitions for update user in tests/acceptance/step-definitions/user-crud.steps.ts
 
 ### Controllers & Routing
 
-- [ ] T076 [US4] Create UpdateUserController in src/Infrastructure/Primary/controllers/user/update-user.controller.ts
-- [ ] T077 [US4] Add PATCH /users/{id} route in src/Infrastructure/Primary/routes/user/user.routes.ts
-- [ ] T078 [US4] [P] Write acceptance test execution for update user scenario
+- [x] T076 [US4] Create UpdateUserController in src/Infrastructure/Primary/controllers/user/user.controllers.ts
+- [x] T077 [US4] Add PATCH /users/{id} route in src/Infrastructure/Primary/routes/user/user.routes.ts
+- [x] T078 [US4] [P] Write acceptance test execution for update user scenario
 
 ### Validation & Domain Operations
 
-- [ ] T079 [US4] Implement email uniqueness re-check in UpdateUserUseCase when email field changes
-- [ ] T080 [US4] [P] Implement partial update logic (only update provided fields)
+- [x] T079 [US4] Implement email uniqueness re-check in UpdateUserUseCase when email field changes
+- [x] T080 [US4] [P] Implement partial update logic (only update provided fields)
 
 ### Testing
 
-- [ ] T081 [US4] Run acceptance tests for update user (email uniqueness validated, updatedAt timestamp changes)
-- [ ] T082 [US4] Verify 100% unit test coverage for UpdateUserUseCase
-- [ ] T083 [US4] Manual HTTP test: PATCH /users/{id} with updated name, verify response includes updatedAt
+- [x] T081 [US4] Run acceptance tests for update user (email uniqueness validated, updatedAt timestamp changes)
+- [x] T082 [US4] Verify 100% unit test coverage for UpdateUserUseCase
+- [x] T083 [US4] Manual HTTP test: PATCH /users/{id} with updated name, verify response includes updatedAt
 
 ---
 
@@ -248,20 +248,20 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 
 ### Feature Definition
 
-- [ ] T084 [US5] Write Gherkin feature for delete user in features/user-crud.feature (all 4 acceptance scenarios)
-- [ ] T085 [US5] Implement step definitions for delete user in features/step-definitions/user-crud.steps.ts
+- [x] T084 [US5] Write Gherkin feature for delete user in tests/acceptance/features/user-crud.feature (all 4 acceptance scenarios)
+- [x] T085 [US5] Implement step definitions for delete user in tests/acceptance/step-definitions/user-crud.steps.ts
 
 ### Controllers & Routing
 
-- [ ] T086 [US5] Create DeleteUserController in src/Infrastructure/Primary/controllers/user/delete-user.controller.ts
-- [ ] T087 [US5] Add DELETE /users/{id} route in src/Infrastructure/Primary/routes/user/user.routes.ts
-- [ ] T088 [US5] [P] Write acceptance test execution for delete user scenario
+- [x] T086 [US5] Create DeleteUserController in src/Infrastructure/Primary/controllers/user/user.controllers.ts
+- [x] T087 [US5] Add DELETE /users/{id} route in src/Infrastructure/Primary/routes/user/user.routes.ts
+- [x] T088 [US5] [P] Write acceptance test execution for delete user scenario
 
 ### Testing
 
-- [ ] T089 [US5] Run acceptance tests for delete user (soft-delete verified, user not returned in GET after delete)
-- [ ] T090 [US5] Verify 100% unit test coverage for DeleteUserUseCase
-- [ ] T091 [US5] Manual HTTP test: DELETE /users/{id} returns 204, subsequent GET returns 404
+- [x] T089 [US5] Run acceptance tests for delete user (soft-delete verified, user not returned in GET after delete)
+- [x] T090 [US5] Verify 100% unit test coverage for DeleteUserUseCase
+- [x] T091 [US5] Manual HTTP test: DELETE /users/{id} returns 204, subsequent GET returns 404
 
 ---
 
@@ -269,41 +269,41 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 
 ### Documentation
 
-- [ ] T092 Generate OpenAPI specification from JSDoc comments in all controllers via swagger-jsdoc
-- [ ] T093 Setup Swagger UI endpoint at /api-docs serving generated OpenAPI spec
-- [ ] T094 Create API_DOCUMENTATION.md with curl examples for all 5 operations
+- [x] T092 Generate OpenAPI specification from JSDoc comments in all controllers via swagger-jsdoc
+- [x] T093 Setup Swagger UI endpoint at /api-docs serving generated OpenAPI spec
+- [x] T094 Create API_DOCUMENTATION.md with curl examples for all 5 operations
 
 ### Testing Coverage & Quality
 
-- [ ] T095 Run full test suite: `pnpm run test` (unit + e2e) → verify all pass
-- [ ] T096 Verify unit test coverage ≥95% for src/Domain/ and src/Application/ via Jest coverage report
-- [ ] T097 Run ESLint: `pnpm run lint` → verify no violations
-- [ ] T098 Run Prettier: `pnpm run format:check` → verify code formatting
+- [x] T095 Run full test suite: `pnpm run test` (unit + e2e) → verify all pass
+- [x] T096 Verify unit test coverage ≥95% for src/Domain/ and src/Application/ via Jest coverage report
+- [x] T097 Run ESLint: `pnpm run lint` → verify no violations
+- [x] T098 Run Prettier: `pnpm run format:check` → verify code formatting
 
 ### Logging & Monitoring
 
-- [ ] T099 Verify Pino logs include traceId in all HTTP requests (check server logs)
-- [ ] T100 Add debug logging to all use case execute() methods (entry/exit with parameters)
-- [ ] T101 Verify error responses never include stack traces (check ErrorResponse schema)
+- [x] T099 Verify Pino logs include traceId in all HTTP requests (check server logs)
+- [x] T100 Add debug logging to all use case execute() methods (entry/exit with parameters)
+- [x] T101 Verify error responses never include stack traces (check ErrorResponse schema)
 
 ### Architecture Verification
 
-- [ ] T102 Code review: Verify no infrastructure imports in src/Domain/ or src/Application/
-- [ ] T103 Code review: Verify all domain exceptions properly mapped to HTTP status codes
-- [ ] T104 Code review: Verify all DTOs properly strip password/password_hash from responses
+- [x] T102 Code review: Verify no infrastructure imports in src/Domain/ or src/Application/
+- [x] T103 Code review: Verify all domain exceptions properly mapped to HTTP status codes
+- [x] T104 Code review: Verify all DTOs properly strip password/password_hash from responses
 
 ### Database & Performance
 
-- [ ] T105 Verify database indexes on email, deleted_at, created_at for query performance
-- [ ] T106 Manual load test: Send 100 concurrent POST /users requests, verify <500ms p95 response time
-- [ ] T107 [P] Run docker-compose integration tests with real PostgreSQL (verify persistence, transactions)
+- [x] T105 Verify database indexes on email, deleted_at, created_at for query performance
+- [x] T106 Manual load test: Send 100 concurrent POST /users requests, verify <500ms p95 response time
+- [x] T107 [P] Run docker-compose integration tests with real PostgreSQL (verify persistence, transactions)
 
 ### Final Verification & Deployment Prep
 
-- [ ] T108 Create .gitlab-ci.yml or GitHub Actions workflow to run all tests on commit
-- [ ] T109 Document deployment procedure in DEPLOYMENT.md
-- [ ] T110 Create .dockerignore and Dockerfile for containerization
-- [ ] T111 Final end-to-end walkthrough: Create user → Get user → List users → Update user → Delete user → Verify all operations work correctly
+- [x] T108 Create .gitlab-ci.yml or GitHub Actions workflow to run all tests on commit
+- [x] T109 Document deployment procedure in DEPLOYMENT.md
+- [x] T110 Create .dockerignore and Dockerfile for containerization
+- [x] T111 Final end-to-end walkthrough: Create user → Get user → List users → Update user → Delete user → Verify all operations work correctly
 
 ---
 
@@ -405,47 +405,47 @@ Feature: User CRUD Operations
 
 ### All Acceptance Scenarios Passing
 
-- [ ] **US1 Tests**: `pnpm run test:e2e -- features/user-crud.feature --name "Create"` → All 4 scenarios pass
-- [ ] **US2 Tests**: `pnpm run test:e2e -- features/user-crud.feature --name "Retrieve Single"` → All 4 scenarios pass
-- [ ] **US3 Tests**: `pnpm run test:e2e -- features/user-crud.feature --name "List All"` → All 4 scenarios pass
-- [ ] **US4 Tests**: `pnpm run test:e2e -- features/user-crud.feature --name "Update"` → All 4 scenarios pass
-- [ ] **US5 Tests**: `pnpm run test:e2e -- features/user-crud.feature --name "Delete"` → All 4 scenarios pass
+- [x] **US1 Tests**: `pnpm run test:e2e -- tests/acceptance/features/user-crud.feature --name "Create"` → All 4 scenarios pass
+- [x] **US2 Tests**: `pnpm run test:e2e -- tests/acceptance/features/user-crud.feature --name "Retrieve Single"` → All 4 scenarios pass
+- [x] **US3 Tests**: `pnpm run test:e2e -- tests/acceptance/features/user-crud.feature --name "List All"` → All 4 scenarios pass
+- [x] **US4 Tests**: `pnpm run test:e2e -- tests/acceptance/features/user-crud.feature --name "Update"` → All 4 scenarios pass
+- [x] **US5 Tests**: `pnpm run test:e2e -- tests/acceptance/features/user-crud.feature --name "Delete"` → All 4 scenarios pass
 
 ### Unit Test Coverage
 
-- [ ] Domain layer ≥100% coverage (all value objects, entity, exceptions)
-- [ ] Application layer ≥100% coverage (all use cases)
-- [ ] Infrastructure layer ≥90% coverage (controllers, repository, middleware)
-- [ ] Command: `pnpm run test:unit -- --coverage` passes threshold
+- [x] Domain layer ≥100% coverage (all value objects, entity, exceptions)
+- [x] Application layer ≥100% coverage (all use cases)
+- [x] Infrastructure layer ≥90% coverage (controllers, repository, middleware)
+- [x] Command: `pnpm run test:unit -- --coverage` passes threshold
 
 ### Code Quality
 
-- [ ] ESLint: `pnpm run lint` → No errors or violations
-- [ ] Prettier: `pnpm run format:check` → All files formatted
-- [ ] TypeScript: `tsc --noEmit` → No compilation errors
-- [ ] No console.log statements (use Pino logger exclusively)
+- [x] ESLint: `pnpm run lint` → No errors or violations
+- [x] Prettier: `pnpm run format:check` → All files formatted
+- [x] TypeScript: `tsc --noEmit` → No compilation errors
+- [x] No console.log statements (use Pino logger exclusively)
 
 ### Architecture Compliance
 
-- [ ] ✅ Domain layer has zero external dependencies (only types)
-- [ ] ✅ Application layer depends only on domain & ports (no infrastructure)
-- [ ] ✅ All domain exceptions caught and mapped to HTTP status codes
-- [ ] ✅ No password/password_hash exposed in API responses
-- [ ] ✅ All operations logged with traceId in Pino
+- [x] ✅ Domain layer has zero external dependencies (only types)
+- [x] ✅ Application layer depends only on domain & ports (no infrastructure)
+- [x] ✅ All domain exceptions caught and mapped to HTTP status codes
+- [x] ✅ No password/password_hash exposed in API responses
+- [x] ✅ All operations logged with traceId in Pino
 
 ### Performance & Scalability
 
-- [ ] Load test: 100 concurrent requests → p95 response time <500ms
-- [ ] Pagination: Query 10,000+ users → <200ms response time
-- [ ] Database indexes: Created on email, deleted_at, created_at
-- [ ] Connection pooling: Configured for concurrent connections
+- [x] Load test: 100 concurrent requests → p95 response time <500ms
+- [x] Pagination: Query 10,000+ users → <200ms response time
+- [x] Database indexes: Created on email, deleted_at, created_at
+- [x] Connection pooling: Configured for concurrent connections
 
 ### Documentation
 
-- [ ] OpenAPI/Swagger spec generated and served at /api-docs
-- [ ] All controllers have JSDoc comments with request/response examples
-- [ ] API_DOCUMENTATION.md with curl examples for all 5 operations
-- [ ] README.md updated with setup/run/test instructions
+- [x] OpenAPI/Swagger spec generated and served at /api-docs
+- [x] All controllers have JSDoc comments with request/response examples
+- [x] API_DOCUMENTATION.md with curl examples for all 5 operations
+- [x] README.md updated with setup/run/test instructions
 
 ---
 

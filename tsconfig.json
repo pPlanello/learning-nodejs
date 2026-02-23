@@ -4,19 +4,21 @@
     "module": "CommonJS",
     "lib": ["ES2021"],
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "strict": true,
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@Domain/*": ["src/Domain/*"],
-      "@Application/*": ["src/Application/*"],
-      "@Infrastructure/*": ["src/Infrastructure/*"]
+      "@Domain/*": ["src/domain/*"],
+      "@Application/*": ["src/application/*"],
+      "@Infrastructure/*": ["src/infrastructure/*"]
     },
     "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*.ts", "features/**/*.ts", "tests/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"]
 }

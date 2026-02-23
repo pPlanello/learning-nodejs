@@ -1,0 +1,13 @@
+src/
+tests/
+features/
+specs/
+.specify/
+.github/
+node_modules/
+coverage/
+*.log
+.env*
+.DS_Store
+.vscode/
+.idea/

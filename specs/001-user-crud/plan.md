@@ -115,12 +115,12 @@ specs/001-user-crud/
 
 ### Source Code (repository root) - Hexagonal Architecture
 
-Implementing **Option 1: Hexagonal Backend** (Domain, Application, Infrastructure separation)
+Implementing **Option 1: Hexagonal Backend** (domain, application, infrastructure separation)
 
 ```text
 src/
-├── Domain/
-│   ├── User/
+├── domain/
+│   ├── user/
 │   │   ├── user.entity.ts                 # User aggregate root, no dependencies
 │   │   ├── user.exceptions.ts             # UserNotFoundException, DuplicateEmailException, etc.
 │   │   ├── value-objects/
@@ -130,12 +130,12 @@ src/
 │   │   └── ports/
 │   │       └── user.repository.port.ts    # Interface (no implementation) 
 │   │
-│   └── Common/
+│   └── common/
 │       ├── domain-event.ts                # Base domain event class
 │       └── value-object.ts                # Base value object class
 │
-├── Application/
-│   ├── User/
+├── application/
+│   ├── user/
 │   │   ├── use-cases/
 │   │   │   ├── create-user.use-case.ts   # CreateUserUseCase, depends on IUserRepository port
 │   │   │   ├── get-user.use-case.ts      # GetUserUseCase
@@ -149,24 +149,19 @@ src/
 │   │   │   └── user.response.dto.ts      # Output DTO (never expose domain entity)
 │   │   └── user-application.service.ts   # Orchestration service (optional)
 │   │
-│   └── Common/
+│   └── common/
 │       ├── application-exception.ts       # Base exception for application layer
 │       └── logger.port.ts                 # ILogger interface (dependency for all use cases)
 │
-├── Infrastructure/
-│   ├── Primary/ (Inbound adapters - HTTP)
+├── infrastructure/
+│   ├── input/ (Inbound adapters - HTTP)
 │   │   ├── server.ts                     # Express app initialization
 │   │   ├── http-server.ts                # HTTP server startup
 │   │   ├── routes/
 │   │   │   └── user/
 │   │   │       └── user.routes.ts        # Route definitions
 │   │   ├── controllers/
-│   │   │   └── user/
-│   │   │       ├── create-user.controller.ts      # POST /users
-│   │   │       ├── get-user.controller.ts         # GET /users/:id
-│   │   │       ├── get-all-users.controller.ts    # GET /users?page=1&limit=10
-│   │   │       ├── update-user.controller.ts      # PATCH /users/:id
-│   │   │       └── delete-user.controller.ts      # DELETE /users/:id
+│   │   │   └── user.controllers.ts            # User HTTP controllers (POST/GET/GET all/PATCH/DELETE)
 │   │   ├── middleware/
 │   │   │   ├── error-handler.middleware.ts        # Global error handler (maps domain exceptions → HTTP)
 │   │   │   ├── trace-id.middleware.ts             # Generates/passes traceId via Pino
@@ -174,19 +169,19 @@ src/
 │   │   └── openapi/
 │   │       └── swagger-config.ts          # Swagger UI initialization + JSDoc -> OpenAPI
 │   │
-│   ├── Secondary/ (Outbound adapters - Data & External Services)
-│   │   └── User/
+│   ├── output/ (Outbound adapters - Data & External Services)
+│   │   └── user/
 │   │       └── repositories/
 │   │           └── typeorm-user.repository.ts     # Implements IUserRepository port
 │   │
-│   ├── Common/
+│   ├── common/
 │   │   ├── config/
 │   │   │   ├── database.config.ts         # PostgreSQL connection config (from env)
 │   │   │   └── logger.config.ts           # Pino logger setup with traceId
 │   │   └── adapters/
 │   │       └── pino-logger.adapter.ts     # Implements ILogger port
 │   │
-│   └── Persistence/
+│   └── persistence/
 │       ├── database.ts                    # Database initialization
 │       └── entities/
 │           └── user.database-entity.ts    # TypeORM @Entity (maps to Domain User)

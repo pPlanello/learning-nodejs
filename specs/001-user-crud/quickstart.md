@@ -629,7 +629,7 @@ export class TypeORMUserRepository implements IUserRepository {
 ### 4.4 Express Controllers
 
 ```typescript
-// src/Infrastructure/Primary/controllers/user/create-user.controller.ts
+// src/Infrastructure/Primary/controllers/user/user.controllers.ts
 import { Request, Response } from 'express';
 import { CreateUserUseCase } from '../../../../Application/User/UseCases/create-user.use-case';
 import { mapUserToDTO } from '../../../../Application/User/DTOs/user.response.dto';
@@ -691,7 +691,7 @@ export function errorHandler(
 ### 5.1 Feature File
 
 ```gherkin
-# features/user-crud.feature
+# tests/acceptance/features/user-crud.feature
 Feature: User CRUD Operations
   Background:
     Given the system is clean with no users
@@ -733,7 +733,7 @@ Feature: User CRUD Operations
 ### 5.2 Step Definitions
 
 ```typescript
-// features/step-definitions/user-crud.steps.ts
+// tests/acceptance/step-definitions/user-crud.steps.ts
 import { Given, When, Then, BeforeEach } from '@cucumber/cucumber';
 import request from 'supertest';
 
