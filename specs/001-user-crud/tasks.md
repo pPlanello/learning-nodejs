@@ -129,8 +129,11 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 ### Database Adapter
 
 - [x] T038 Create UserDatabaseEntity TypeORM entity in src/Infrastructure/Persistence/entities/user.database-entity.ts
-- [x] T039 Create TypeORMUserRepository implementation in src/Infrastructure/Secondary/repositories/typeorm-user.repository.ts
-- [x] T040 [P] Write integration tests for TypeORMUserRepository in tests/integration/repositories/typeorm-user.repository.spec.ts
+  - [REFRACTOR NOTE] Conversion logic (fromDomain, toDomain) is now static methods on UserDatabaseEntity.
+- [x] T039 Create UserDatabaseRepository implementation in src/Infrastructure/Secondary/repositories/user.database-repository.ts
+  - [REFRACTOR NOTE] All imports are direct, no index.ts/barrel file used.
+- [x] T040 [P] Write integration tests for UserDatabaseRepository in tests/integration/repositories/user.database-repository.spec.ts
+  - [REFRACTOR NOTE] Tests import UserDatabaseRepository directly.
 
 ### HTTP Infrastructure
 
@@ -297,6 +300,7 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 - [x] T105 Verify database indexes on email, deleted_at, created_at for query performance
 - [x] T106 Manual load test: Send 100 concurrent POST /users requests, verify <500ms p95 response time
 - [x] T107 [P] Run docker-compose integration tests with real PostgreSQL (verify persistence, transactions)
+  - [REFRACTOR NOTE] E2E tests are run via scripts/run-e2e.cjs, which uses Docker Compose for the database.
 
 ### Final Verification & Deployment Prep
 
@@ -330,7 +334,7 @@ Application Layer Tests (T033-T037):
 
 ```
 Infrastructure Layer Tests (T040):
-  ✓ TypeORMUserRepository (create, read, update, delete with real DB)
+  ✓ UserDatabaseRepository (create, read, update, delete with real DB)
   ✓ Database schema integrity (constraints, indexes)
   ✓ Soft-delete filtering (deleted users not returned)
   ✓ Unique email constraint enforcement
@@ -510,54 +514,4 @@ curl -X POST http://localhost:3000/api/v1/users \
   -d '{"name":"John","email":"john3@example.com"}'
 # ✓ Expect: 400 Bad Request + Missing password field error
 ```
-
----
-
-## Documentation Links
-
-- **Specification**: [spec.md](./spec.md) - User stories, requirements, success criteria
-- **Implementation Plan**: [plan.md](./plan.md) - Architecture, project structure, technical decisions
-- **Research & Decisions**: [research.md](./research.md) - Technical justifications, alternatives considered
-- **Data Model**: [data-model.md](./data-model.md) - Domain entities, value objects, database schema
-- **Quick Start Guide**: [quickstart.md](./quickstart.md) - Code examples and implementation walkthrough
-- **API Contracts**: [contracts/user-api.openapi.yaml](./contracts/user-api.openapi.yaml) - OpenAPI 3.0 specification
-- **DTOs**: [contracts/user.dto.ts](./contracts/user.dto.ts) - TypeScript interfaces for request/response
-
----
-
-## Task Tracking Commands
-
-```bash
-# Count total tasks
-grep -c "^- \[ \]" specs/001-user-crud/tasks.md
-
-# Count completed tasks
-grep -c "^- \[x\]" specs/001-user-crud/tasks.md
-
-# Filter by phase
-grep "^## Phase" specs/001-user-crud/tasks.md
-
-# Filter by user story
-grep "\[US1\]" specs/001-user-crud/tasks.md
-grep "\[US2\]" specs/001-user-crud/tasks.md
-grep "\[US3\]" specs/001-user-crud/tasks.md
-grep "\[US4\]" specs/001-user-crud/tasks.md
-grep "\[US5\]" specs/001-user-crud/tasks.md
-
-# Filter parallelizable tasks
-grep "\[P\]" specs/001-user-crud/tasks.md
-
-# Run tests
-pnpm run test                  # All tests
-pnpm run test:unit            # Unit tests only
-pnpm run test:e2e             # Acceptance tests only
-pnpm run test:unit -- --coverage  # With coverage report
-```
-
----
-
-**Generated**: February 18, 2026  
-**Feature Branch**: `001-user-crud`  
-**Status**: Ready for Implementation  
-**Total Tasks**: 110 (with parallelization opportunities for ~25% time savings)
 

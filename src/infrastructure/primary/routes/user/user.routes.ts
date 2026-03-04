@@ -8,7 +8,7 @@ import { UpdateUserUseCase } from '@Application/user/use-cases/update-user.use-c
 import { type ILogger } from '@Domain/common/logger.port'
 import { type IUserRepository } from '@Domain/user/ports/user.repository.port'
 import { PinoLoggerAdapter } from '@Infrastructure/adapters/pino-logger.adapter'
-import { TypeORMUserRepository } from '@Infrastructure/secondary/repositories/typeorm-user.repository'
+import { UserDatabaseRepository } from '@Infrastructure/secondary/repositories/user.database-repository'
 
 import {
   CreateUserController,
@@ -24,7 +24,7 @@ export interface UserRoutesDependencies {
 }
 
 export const createUserRoutes = (dependencies: UserRoutesDependencies = {}): Router => {
-  const userRepository = dependencies.userRepository ?? new TypeORMUserRepository()
+  const userRepository = dependencies.userRepository ?? new UserDatabaseRepository()
   const logger = dependencies.logger ?? new PinoLoggerAdapter()
 
   const createUserController = new CreateUserController(

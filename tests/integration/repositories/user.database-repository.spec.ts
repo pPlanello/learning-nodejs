@@ -7,7 +7,7 @@ const hasDatabaseUrl = process.env.DATABASE_URL !== undefined
 
 const describeIfDatabase = hasDatabaseUrl ? describe : describe.skip
 
-describeIfDatabase('TypeORMUserRepository', () => {
+describeIfDatabase('UserDatabaseRepository', () => {
   let appDataSource: {
     isInitialized: boolean
     initialize: () => Promise<unknown>
@@ -19,13 +19,13 @@ describeIfDatabase('TypeORMUserRepository', () => {
   }
 
   beforeAll(async () => {
-    const [{ AppDataSource }, { TypeORMUserRepository }] = await Promise.all([
+    const [{ AppDataSource }, { UserDatabaseRepository }] = await Promise.all([
       import('@Infrastructure/config/database.config'),
-      import('@Infrastructure/secondary/repositories/typeorm-user.repository'),
+      import('@Infrastructure/secondary/repositories/user.database-repository'),
     ])
 
     appDataSource = AppDataSource
-    repository = new TypeORMUserRepository()
+    repository = new UserDatabaseRepository()
 
     if (!appDataSource.isInitialized) {
       await appDataSource.initialize()

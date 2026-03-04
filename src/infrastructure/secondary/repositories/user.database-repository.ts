@@ -4,15 +4,14 @@ import {
   type IUserRepository,
 } from '@Domain/user/ports/user.repository.port'
 import { Email } from '@Domain/user/value-objects/email.value-object'
-import { HashedPassword } from '@Domain/user/value-objects/hashed-password.value-object'
 import { UserId } from '@Domain/user/value-objects/user-id.value-object'
-import { User, type UserStatus } from '@Domain/user/user.entity'
+import { User } from '@Domain/user/user.entity'
 import { AppDataSource } from '@Infrastructure/config/database.config'
 import { type Repository } from 'typeorm'
 
-import { UserDatabaseEntity } from '../../persistence/entities/user.database-entity'
+import { UserDatabaseEntity } from '@Infrastructure/secondary/repositories/entities/user.database-entity'
 
-export class TypeORMUserRepository implements IUserRepository {
+export class UserDatabaseRepository implements IUserRepository {
   private readonly repository: Repository<UserDatabaseEntity>
 
   constructor() {
@@ -20,19 +19,19 @@ export class TypeORMUserRepository implements IUserRepository {
   }
 
   public async create(user: User): Promise<User> {
-    const persistedEntity = await this.repository.save(this.toDatabaseEntity(user))
+    const persistedEntity = await this.repository.save(UserDatabaseEntity.fromDomain(user))
 
-    return this.toDomainEntity(persistedEntity)
+    return UserDatabaseEntity.toDomain(persistedEntity)
   }
 
   public async findById(id: UserId): Promise<User | null> {
     const databaseEntity = await this.repository.findOne({ where: { id: id.toString() } })
-    return databaseEntity === null ? null : this.toDomainEntity(databaseEntity)
+    return databaseEntity === null ? null : UserDatabaseEntity.toDomain(databaseEntity)
   }
 
   public async findByEmail(email: Email): Promise<User | null> {
     const databaseEntity = await this.repository.findOne({ where: { email: email.toString() } })
-    return databaseEntity === null ? null : this.toDomainEntity(databaseEntity)
+    return databaseEntity === null ? null : UserDatabaseEntity.toDomain(databaseEntity)
   }
 
   public async findAll(options: FindAllUsersOptions): Promise<FindAllUsersResult> {
@@ -73,13 +72,13 @@ export class TypeORMUserRepository implements IUserRepository {
     const [rows, total] = await queryBuilder.getManyAndCount()
 
     return {
-      data: rows.map((row) => this.toDomainEntity(row)),
+      data: rows.map((row) => UserDatabaseEntity.toDomain(row)),
       total,
     }
   }
 
   public async update(user: User): Promise<User> {
-    await this.repository.save(this.toDatabaseEntity(user))
+    await this.repository.save(UserDatabaseEntity.fromDomain(user))
     const refreshed = await this.findById(user.id)
 
     if (refreshed === null) {
@@ -87,32 +86,5 @@ export class TypeORMUserRepository implements IUserRepository {
     }
 
     return refreshed
-  }
-
-  private toDatabaseEntity(user: User): UserDatabaseEntity {
-    const entity = new UserDatabaseEntity()
-    entity.id = user.id.toString()
-    entity.name = user.name
-    entity.email = user.email.toString()
-    entity.passwordHash = user.password.hash
-    entity.status = user.status
-    entity.createdAt = user.createdAt
-    entity.updatedAt = user.updatedAt
-    entity.deletedAt = user.deletedAt
-
-    return entity
-  }
-
-  private toDomainEntity(entity: UserDatabaseEntity): User {
-    return new User(
-      new UserId(entity.id),
-      entity.name,
-      new Email(entity.email),
-      HashedPassword.fromHash(entity.passwordHash),
-      entity.status as UserStatus,
-      entity.createdAt,
-      entity.updatedAt,
-      entity.deletedAt,
-    )
   }
 }

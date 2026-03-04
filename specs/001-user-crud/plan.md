@@ -172,7 +172,7 @@ src/
 │   ├── output/ (Outbound adapters - Data & External Services)
 │   │   └── user/
 │   │       └── repositories/
-│   │           └── typeorm-user.repository.ts     # Implements IUserRepository port
+│   │           └── user.database-repository.ts     # Implements IUserRepository port
 │   │
 │   ├── common/
 │   │   ├── config/
@@ -187,6 +187,11 @@ src/
 │           └── user.database-entity.ts    # TypeORM @Entity (maps to Domain User)
 │
 └── index.ts                              # Package entry point
+
+# [REFRACTOR NOTE] The codebase no longer uses barrel files or index.ts for repository exports. All imports are direct, e.g.:
+# import { UserDatabaseRepository } from 'src/infrastructure/secondary/repositories/user.database-repository'
+# Conversion logic (toDatabaseEntity, toDomainEntity) is now static methods on UserDatabaseEntity.
+# E2E tests are run via scripts/run-e2e.cjs, which uses Docker Compose for the database.
 
 tests/
 ├── acceptance/                           # Cucumber BDD E2E tests
@@ -217,18 +222,5 @@ tests/
 │
 └── integration/                          # Integration tests (adapters, real DB)
     └── repositories/
-        └── typeorm-user.repository.spec.ts  # Tests with real PostgreSQL instance
+        └── user.database-repository.spec.ts  # Tests with real PostgreSQL instance
 ```
-
-**Structure Decision**: 
-- **Hexagonal Pattern**: Clear separation of Domain (zero dependencies) → Application (use cases) → Infrastructure (adapters)
-- **Primary Adapter**: Express HTTP controllers handle input validation and HTTP mapping
-- **Secondary Adapter**: TypeORM repository implements the IUserRepository port for PostgreSQL persistence
-- **Logging**: Pino adapter implements ILogger port; middleware injects traceId into all logs
-- **Testing**: BDD acceptance tests (Cucumber) for user journeys; TDD unit tests (Jest) for domain/application logic; integration tests for repository implementations
-- **Error Handling**: Domain exceptions thrown in business logic; Primary adapter middleware catches and maps to HTTP status codes
-- **Package Structure**: Feature-based organization (User/) within each architectural layer for clear separation of concerns
-
-## Complexity Tracking
-
-No constitution violations requiring justification. The hexagonal architecture naturally enforces all requirements.

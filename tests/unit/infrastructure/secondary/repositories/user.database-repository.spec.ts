@@ -10,7 +10,7 @@ jest.mock('@Infrastructure/config/database.config', () => ({
 }))
 
 import { AppDataSource } from '@Infrastructure/config/database.config'
-import { TypeORMUserRepository } from '@Infrastructure/secondary/repositories/typeorm-user.repository'
+import { UserDatabaseRepository } from '@Infrastructure/secondary/repositories/user.database-repository'
 
 const createDomainUser = () =>
   new User(
@@ -20,7 +20,7 @@ const createDomainUser = () =>
     new HashedPassword('SecurePass123!'),
   )
 
-describe('TypeORMUserRepository', () => {
+describe('UserDatabaseRepository', () => {
   const save = jest.fn()
   const findOne = jest.fn()
   const andWhere = jest.fn()
@@ -57,7 +57,7 @@ describe('TypeORMUserRepository', () => {
   })
 
   it('creates and finds users', async () => {
-    const repository = new TypeORMUserRepository()
+    const repository = new UserDatabaseRepository()
     const user = createDomainUser()
 
     save.mockResolvedValue({
@@ -92,7 +92,7 @@ describe('TypeORMUserRepository', () => {
   })
 
   it('findAll applies filters and pagination', async () => {
-    const repository = new TypeORMUserRepository()
+    const repository = new UserDatabaseRepository()
     const user = createDomainUser()
 
     getManyAndCount.mockResolvedValue([
@@ -137,7 +137,7 @@ describe('TypeORMUserRepository', () => {
   })
 
   it('updates user and throws if user does not exist', async () => {
-    const repository = new TypeORMUserRepository()
+    const repository = new UserDatabaseRepository()
     const user = createDomainUser()
 
     save.mockResolvedValue(undefined)

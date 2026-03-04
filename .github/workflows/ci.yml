@@ -37,8 +37,6 @@ jobs:
         run: pnpm exec jest --coverage --runInBand
 
       - name: E2E tests
-        env:
-          DATABASE_URL: postgresql://local:test@localhost:5432/testdb
         run: pnpm run test:e2e
 
       - name: Build

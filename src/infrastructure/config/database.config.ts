@@ -2,7 +2,7 @@ import 'reflect-metadata'
 
 import { DataSource } from 'typeorm'
 
-import { UserDatabaseEntity } from '../persistence/entities/user.database-entity'
+import { UserDatabaseEntity } from '@Infrastructure/secondary/repositories/entities/user.database-entity'
 
 const databaseUrl = process.env.DATABASE_URL
 

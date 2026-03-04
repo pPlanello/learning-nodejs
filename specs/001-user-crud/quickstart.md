@@ -502,6 +502,10 @@ mkdir -p src/Infrastructure/Config
 ```typescript
 // src/Infrastructure/Persistence/entities/user.database-entity.ts
 import { Entity, Column, PrimaryColumn, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
+import { User } from '../../../Domain/User/user.entity';
+import { UserId } from '../../../Domain/User/ValueObjects/user-id.value-object';
+import { Email } from '../../../Domain/User/ValueObjects/email.value-object';
+import { HashedPassword } from '../../../Domain/User/ValueObjects/hashed-password.value-object';
 
 @Entity('users')
 @Index(['email'])
@@ -530,13 +534,40 @@ export class UserDatabaseEntity {
 
   @Column('timestamp', { nullable: true })
   deleted_at: Date | null;
+
+  // [REFRACTOR NOTE] Conversion logic is now static methods:
+  static fromDomain(user: User): UserDatabaseEntity {
+    const entity = new UserDatabaseEntity();
+    entity.id = user.id.toString();
+    entity.name = user.name;
+    entity.email = user.email.toString();
+    entity.password_hash = user.password.hash;
+    entity.status = user.status;
+    entity.created_at = user.createdAt;
+    entity.updated_at = user.updatedAt;
+    entity.deleted_at = user.deletedAt;
+    return entity;
+  }
+
+  static toDomain(entity: UserDatabaseEntity): User {
+    return new User(
+      new UserId(entity.id),
+      entity.name,
+      new Email(entity.email),
+      HashedPassword.fromHash(entity.password_hash),
+      entity.status as any,
+      entity.created_at,
+      entity.updated_at,
+      entity.deleted_at,
+    );
+  }
 }
 ```
 
 ### 4.3 Repository Implementation
 
 ```typescript
-// src/Infrastructure/Secondary/repositories/typeorm-user.repository.ts
+// src/Infrastructure/Secondary/repositories/user.database-repository.ts
 import { Repository } from 'typeorm';
 import { User } from '../../../Domain/User/user.entity';
 import { UserId } from '../../../Domain/User/ValueObjects/user-id.value-object';
@@ -545,7 +576,7 @@ import { HashedPassword } from '../../../Domain/User/ValueObjects/hashed-passwor
 import { IUserRepository } from '../../../Domain/User/Ports/user.repository.port';
 import { UserDatabaseEntity } from '../../Persistence/entities/user.database-entity';
 
-export class TypeORMUserRepository implements IUserRepository {
+export class UserDatabaseRepository implements IUserRepository {
   constructor(private repository: Repository<UserDatabaseEntity>) {}
 
   async create(user: User): Promise<User> {
@@ -612,7 +643,7 @@ export class TypeORMUserRepository implements IUserRepository {
       new UserId(entity.id),
       entity.name,
       new Email(entity.email),
-      this.restorePassword(entity.password_hash),
+      HashedPassword.fromHash(entity.password_hash),
       entity.status as any,
       entity.created_at,
       entity.updated_at,
@@ -847,4 +878,3 @@ http://localhost:3000/api-docs
 ✅ **No Secret Leaks**: Use .env with dotenv-safe validation  
 ✅ **Documentation**: OpenAPI spec auto-generated from JSDoc  
 ✅ **Code Quality**: Prettier + ESLint enforcement  
-
