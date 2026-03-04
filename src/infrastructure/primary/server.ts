@@ -3,7 +3,7 @@ import 'reflect-metadata'
 import express from 'express'
 
 import { type ILogger } from '@Domain/common/logger.port'
-import { type IUserRepository } from '@Domain/user/ports/user.repository.port'
+import { type UserRepository } from '@Domain/repositories/user.repository'
 import { AppDataSource } from '@Infrastructure/config/database.config'
 import { PinoLoggerAdapter } from '@Infrastructure/adapters/pino-logger.adapter'
 
@@ -14,7 +14,7 @@ import { setupSwagger } from './openapi/swagger-config'
 import { createUserRoutes } from './routes/user/user.routes'
 
 interface BuildAppDependencies {
-  userRepository?: IUserRepository
+  userRepository?: UserRepository
   logger?: ILogger
 }
 

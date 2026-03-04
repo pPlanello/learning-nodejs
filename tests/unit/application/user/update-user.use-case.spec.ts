@@ -2,22 +2,22 @@ import { type ILogger } from '@Domain/common/logger.port'
 import {
   type FindAllUsersOptions,
   type FindAllUsersResult,
-  type IUserRepository,
-} from '@Domain/user/ports/user.repository.port'
-import { Email, InvalidEmailFormatException } from '@Domain/user/value-objects/email.value-object'
-import { HashedPassword } from '@Domain/user/value-objects/hashed-password.value-object'
-import { UserId } from '@Domain/user/value-objects/user-id.value-object'
-import { User } from '@Domain/user/user.entity'
+  type UserRepository,
+} from '@Domain/repositories/user.repository'
+import { Email, InvalidEmailFormatException } from '@Domain/value-objects/email.value-object'
+import { HashedPassword } from '@Domain/value-objects/hashed-password.value-object'
+import { UserId } from '@Domain/value-objects/user-id.value-object'
+import { User } from '@Domain/entities/user.entity'
 import {
   DuplicateEmailException,
   InvalidUserIdException,
   UserNotFoundException,
-} from '@Domain/user/user.exceptions'
+} from '@Domain/exceptions/user.exceptions'
 
 import { UpdateUserUseCase } from '@Application/user/use-cases/update-user.use-case'
 
 describe('UpdateUserUseCase', () => {
-  let userRepository: jest.Mocked<IUserRepository>
+  let userRepository: jest.Mocked<UserRepository>
   let logger: jest.Mocked<ILogger>
   let useCase: UpdateUserUseCase
 
@@ -95,7 +95,7 @@ describe('UpdateUserUseCase', () => {
     expect(userRepository.findByEmail).toHaveBeenCalledTimes(1)
   })
 
-  it('allows email update when found user with same id', async () => {
+  it('allows email update when found entities with same id', async () => {
     const user = new User(
       new UserId(),
       'Same Id Name',
@@ -122,7 +122,7 @@ describe('UpdateUserUseCase', () => {
     const user = new User(
       new UserId(),
       'Target User',
-      new Email('target.user@example.com'),
+      new Email('target.entities@example.com'),
       new HashedPassword('SecurePass123!'),
     )
 
@@ -144,18 +144,18 @@ describe('UpdateUserUseCase', () => {
     expect(result.email.toString()).toBe('deleted.duplicate@example.com')
   })
 
-  it('throws DuplicateEmailException when another active user has requested email', async () => {
+  it('throws DuplicateEmailException when another active entities has requested email', async () => {
     const user = new User(
       new UserId(),
       'Target User',
-      new Email('target.user@example.com'),
+      new Email('target.entities@example.com'),
       new HashedPassword('SecurePass123!'),
     )
 
     const duplicate = new User(
       new UserId(),
       'Duplicate User',
-      new Email('duplicate.user@example.com'),
+      new Email('duplicate.entities@example.com'),
       new HashedPassword('SecurePass123!'),
     )
 
@@ -163,13 +163,13 @@ describe('UpdateUserUseCase', () => {
     userRepository.findByEmail.mockResolvedValue(duplicate)
 
     await expect(
-      useCase.execute(user.id.toString(), { email: 'duplicate.user@example.com' }),
+      useCase.execute(user.id.toString(), { email: 'duplicate.entities@example.com' }),
     ).rejects.toBeInstanceOf(DuplicateEmailException)
 
     expect(userRepository.update).not.toHaveBeenCalled()
   })
 
-  it('throws UserNotFoundException when user does not exist', async () => {
+  it('throws UserNotFoundException when entities does not exist', async () => {
     userRepository.findById.mockResolvedValue(null)
 
     await expect(
@@ -177,11 +177,11 @@ describe('UpdateUserUseCase', () => {
     ).rejects.toBeInstanceOf(UserNotFoundException)
   })
 
-  it('throws UserNotFoundException when user is deleted', async () => {
+  it('throws UserNotFoundException when entities is deleted', async () => {
     const deletedUser = new User(
       new UserId(),
       'Deleted User',
-      new Email('deleted.user@example.com'),
+      new Email('deleted.entities@example.com'),
       new HashedPassword('SecurePass123!'),
     )
     deletedUser.delete()
@@ -197,7 +197,7 @@ describe('UpdateUserUseCase', () => {
     const user = new User(
       new UserId(),
       'Invalid Email User',
-      new Email('invalid.email.user@example.com'),
+      new Email('invalid.email.entities@example.com'),
       new HashedPassword('SecurePass123!'),
     )
 
@@ -210,10 +210,10 @@ describe('UpdateUserUseCase', () => {
     expect(userRepository.update).not.toHaveBeenCalled()
   })
 
-  it('throws InvalidUserIdException for invalid user id format', async () => {
-    await expect(useCase.execute('invalid-user-id', { name: 'Invalid Id' })).rejects.toBeInstanceOf(
-      InvalidUserIdException,
-    )
+  it('throws InvalidUserIdException for invalid entities id format', async () => {
+    await expect(
+      useCase.execute('invalid-entities-id', { name: 'Invalid Id' }),
+    ).rejects.toBeInstanceOf(InvalidUserIdException)
 
     expect(userRepository.findById).not.toHaveBeenCalled()
   })

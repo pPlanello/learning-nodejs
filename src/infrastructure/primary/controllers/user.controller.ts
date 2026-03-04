@@ -97,7 +97,7 @@ import { BadRequestException } from '../exceptions/bad-request.exception'
  * /users:
  *   post:
  *     tags: [Users]
- *     summary: Create user
+ *     summary: Create entities
  *     requestBody:
  *       required: true
  *       content:
@@ -130,7 +130,7 @@ export class CreateUserController {
 
   /**
    * POST /users
-   * Creates a new user.
+   * Creates a new entities.
    */
   public handle = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -138,7 +138,7 @@ export class CreateUserController {
       const validationErrors = await validate(input)
 
       if (validationErrors.length > 0) {
-        throw new BadRequestException('Invalid create user payload')
+        throw new BadRequestException('Invalid create entities payload')
       }
 
       const createdUser = await this.createUserUseCase.execute({
@@ -159,7 +159,7 @@ export class CreateUserController {
  * /users/{id}:
  *   get:
  *     tags: [Users]
- *     summary: Get user by id
+ *     summary: Get entities by id
  *     parameters:
  *       - in: path
  *         name: id
@@ -185,7 +185,7 @@ export class GetUserController {
 
   /**
    * GET /users/:id
-   * Retrieves a user by id.
+   * Retrieves a entities by id.
    */
   public handle = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -292,7 +292,7 @@ export class GetAllUsersController {
  * /users/{id}:
  *   patch:
  *     tags: [Users]
- *     summary: Update user
+ *     summary: Update entities
  *     parameters:
  *       - in: path
  *         name: id
@@ -326,7 +326,7 @@ export class UpdateUserController {
 
   /**
    * PATCH /users/:id
-   * Updates a user partially.
+   * Updates a entities partially.
    */
   public handle = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -348,7 +348,7 @@ export class UpdateUserController {
  * /users/{id}:
  *   delete:
  *     tags: [Users]
- *     summary: Delete user (soft delete)
+ *     summary: Delete entities (soft delete)
  *     parameters:
  *       - in: path
  *         name: id
@@ -370,7 +370,7 @@ export class DeleteUserController {
 
   /**
    * DELETE /users/:id
-   * Soft-deletes a user.
+   * Soft-deletes a entities.
    */
   public handle = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {

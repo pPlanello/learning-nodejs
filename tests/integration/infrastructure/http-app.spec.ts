@@ -1,12 +1,9 @@
 import request from 'supertest'
 
-import {
-  type FindAllUsersOptions,
-  type IUserRepository,
-} from '@Domain/user/ports/user.repository.port'
-import { Email } from '@Domain/user/value-objects/email.value-object'
-import { type UserId } from '@Domain/user/value-objects/user-id.value-object'
-import { type User } from '@Domain/user/user.entity'
+import { type FindAllUsersOptions, type UserRepository } from '@Domain/repositories/user.repository'
+import { Email } from '@Domain/value-objects/email.value-object'
+import { type UserId } from '@Domain/value-objects/user-id.value-object'
+import { type User } from '@Domain/entities/user.entity'
 
 process.env.DATABASE_URL =
   process.env.DATABASE_URL ?? 'postgresql://local:test@localhost:5432/testdb'
@@ -14,7 +11,7 @@ process.env.DATABASE_URL =
 const { PinoLoggerAdapter } = require('@Infrastructure/adapters/pino-logger.adapter')
 const { buildApp } = require('@Infrastructure/primary/server')
 
-class TestUserRepository implements IUserRepository {
+class TestUserRepository implements UserRepository {
   private readonly usersById = new Map<string, User>()
 
   public async create(user: User): Promise<User> {

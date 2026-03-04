@@ -1,4 +1,4 @@
-import { type User } from '@Domain/user/user.entity'
+import { type User } from '@Domain/entities/user.entity'
 
 export interface UserResponseDTO {
   id: string

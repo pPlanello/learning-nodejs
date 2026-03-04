@@ -2,17 +2,17 @@ import { type ILogger } from '@Domain/common/logger.port'
 import {
   type FindAllUsersOptions,
   type FindAllUsersResult,
-  type IUserRepository,
-} from '@Domain/user/ports/user.repository.port'
-import { Email } from '@Domain/user/value-objects/email.value-object'
-import { HashedPassword } from '@Domain/user/value-objects/hashed-password.value-object'
-import { UserId } from '@Domain/user/value-objects/user-id.value-object'
-import { User } from '@Domain/user/user.entity'
+  type UserRepository,
+} from '@Domain/repositories/user.repository'
+import { Email } from '@Domain/value-objects/email.value-object'
+import { HashedPassword } from '@Domain/value-objects/hashed-password.value-object'
+import { UserId } from '@Domain/value-objects/user-id.value-object'
+import { User } from '@Domain/entities/user.entity'
 
 import { GetAllUsersUseCase } from '@Application/user/use-cases/get-all-users.use-case'
 
 describe('GetAllUsersUseCase', () => {
-  let userRepository: jest.Mocked<IUserRepository>
+  let userRepository: jest.Mocked<UserRepository>
   let logger: jest.Mocked<ILogger>
   let useCase: GetAllUsersUseCase
 
@@ -27,7 +27,7 @@ describe('GetAllUsersUseCase', () => {
             new User(
               new UserId(),
               'Listed User',
-              new Email('listed.user@example.com'),
+              new Email('listed.entities@example.com'),
               new HashedPassword('SecurePass123!'),
             ),
           ],

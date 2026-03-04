@@ -18,11 +18,11 @@ servers:
 paths:
   /users:
     post:
-      summary: Create a new user
+      summary: Create a new entities
       operationId: createUser
       tags:
         - Users
-      description: Creates a new user account with the provided information. Email must be unique.
+      description: Creates a new entities account with the provided information. Email must be unique.
       requestBody:
         required: true
         content:
@@ -31,7 +31,7 @@ paths:
               $ref: '#/components/schemas/CreateUserRequest'
             examples:
               success:
-                summary: Valid user creation
+                summary: Valid entities creation
                 value:
                   name: "John Doe"
                   email: "john@example.com"
@@ -45,7 +45,7 @@ paths:
                 $ref: '#/components/schemas/UserResponse'
               examples:
                 success:
-                  summary: Created user
+                  summary: Created entities
                   value:
                     id: "550e8400-e29b-41d4-a716-446655440000"
                     name: "John Doe"
@@ -94,7 +94,7 @@ paths:
               - active
               - suspended
               - pending_verification
-          description: Filter by user status
+          description: Filter by entities status
         - name: sortBy
           in: query
           required: false
@@ -154,11 +154,11 @@ paths:
 
   /users/{id}:
     get:
-      summary: Get a user by ID
+      summary: Get a entities by ID
       operationId: getUser
       tags:
         - Users
-      description: Retrieves a specific user by their unique ID. Returns 404 if user not found or is deleted.
+      description: Retrieves a specific entities by their unique ID. Returns 404 if entities not found or is deleted.
       parameters:
         - name: id
           in: path
@@ -182,11 +182,11 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
     patch:
-      summary: Update a user
+      summary: Update a entities
       operationId: updateUser
       tags:
         - Users
-      description: Updates specific fields of an existing user. Email must remain unique.
+      description: Updates specific fields of an existing entities. Email must remain unique.
       parameters:
         - name: id
           in: path
@@ -227,11 +227,11 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
     delete:
-      summary: Delete a user
+      summary: Delete a entities
       operationId: deleteUser
       tags:
         - Users
-      description: Deletes (soft delete) a user by marking as inactive. User data remains in database for audit purposes.
+      description: Deletes (soft delete) a entities by marking as inactive. User data remains in database for audit purposes.
       parameters:
         - name: id
           in: path
@@ -318,7 +318,7 @@ components:
         id:
           type: string
           format: uuid
-          description: Unique user identifier
+          description: Unique entities identifier
           example: "550e8400-e29b-41d4-a716-446655440000"
         name:
           type: string
@@ -340,7 +340,7 @@ components:
         createdAt:
           type: string
           format: date-time
-          description: Date and time when user was created (ISO 8601)
+          description: Date and time when entities was created (ISO 8601)
           example: "2026-02-18T10:30:00Z"
         updatedAt:
           type: string
@@ -351,7 +351,7 @@ components:
           type: string
           format: date-time
           nullable: true
-          description: Date and time when user was deleted (null if not deleted; ISO 8601)
+          description: Date and time when entities was deleted (null if not deleted; ISO 8601)
           example: null
 
     GetAllUsersResponse:
@@ -367,7 +367,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserResponse'
-          description: Array of user objects
+          description: Array of entities objects
         total:
           type: integer
           minimum: 0

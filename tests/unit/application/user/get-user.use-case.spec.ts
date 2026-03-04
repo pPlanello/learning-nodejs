@@ -2,18 +2,18 @@ import { type ILogger } from '@Domain/common/logger.port'
 import {
   type FindAllUsersOptions,
   type FindAllUsersResult,
-  type IUserRepository,
-} from '@Domain/user/ports/user.repository.port'
-import { Email } from '@Domain/user/value-objects/email.value-object'
-import { HashedPassword } from '@Domain/user/value-objects/hashed-password.value-object'
-import { UserId } from '@Domain/user/value-objects/user-id.value-object'
-import { User } from '@Domain/user/user.entity'
-import { InvalidUserIdException, UserNotFoundException } from '@Domain/user/user.exceptions'
+  type UserRepository,
+} from '@Domain/repositories/user.repository'
+import { Email } from '@Domain/value-objects/email.value-object'
+import { HashedPassword } from '@Domain/value-objects/hashed-password.value-object'
+import { UserId } from '@Domain/value-objects/user-id.value-object'
+import { User } from '@Domain/entities/user.entity'
+import { InvalidUserIdException, UserNotFoundException } from '@Domain/exceptions/user.exceptions'
 
 import { GetUserUseCase } from '@Application/user/use-cases/get-user.use-case'
 
 describe('GetUserUseCase', () => {
-  let userRepository: jest.Mocked<IUserRepository>
+  let userRepository: jest.Mocked<UserRepository>
   let logger: jest.Mocked<ILogger>
   let useCase: GetUserUseCase
 
@@ -41,11 +41,11 @@ describe('GetUserUseCase', () => {
     useCase = new GetUserUseCase(userRepository, logger)
   })
 
-  it('returns user when found and active', async () => {
+  it('returns entities when found and active', async () => {
     const user = new User(
       new UserId(),
       'Existing User',
-      new Email('existing.user@example.com'),
+      new Email('existing.entities@example.com'),
       new HashedPassword('SecurePass123!'),
     )
 
@@ -58,7 +58,7 @@ describe('GetUserUseCase', () => {
     expect(logger.debug).toHaveBeenCalledTimes(2)
   })
 
-  it('throws UserNotFoundException when user does not exist', async () => {
+  it('throws UserNotFoundException when entities does not exist', async () => {
     userRepository.findById.mockResolvedValue(null)
 
     await expect(useCase.execute('11111111-1111-4111-8111-111111111111')).rejects.toBeInstanceOf(
@@ -66,11 +66,11 @@ describe('GetUserUseCase', () => {
     )
   })
 
-  it('throws UserNotFoundException when user is deleted', async () => {
+  it('throws UserNotFoundException when entities is deleted', async () => {
     const deletedUser = new User(
       new UserId(),
       'Deleted User',
-      new Email('deleted.user@example.com'),
+      new Email('deleted.entities@example.com'),
       new HashedPassword('SecurePass123!'),
     )
     deletedUser.delete()
@@ -82,8 +82,10 @@ describe('GetUserUseCase', () => {
     )
   })
 
-  it('throws InvalidUserIdException for invalid user id format', async () => {
-    await expect(useCase.execute('invalid-user-id')).rejects.toBeInstanceOf(InvalidUserIdException)
+  it('throws InvalidUserIdException for invalid entities id format', async () => {
+    await expect(useCase.execute('invalid-entities-id')).rejects.toBeInstanceOf(
+      InvalidUserIdException,
+    )
     expect(userRepository.findById).not.toHaveBeenCalled()
   })
 })

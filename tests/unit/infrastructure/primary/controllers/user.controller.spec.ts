@@ -1,7 +1,7 @@
-import { Email } from '@Domain/user/value-objects/email.value-object'
-import { HashedPassword } from '@Domain/user/value-objects/hashed-password.value-object'
-import { UserId } from '@Domain/user/value-objects/user-id.value-object'
-import { User } from '@Domain/user/user.entity'
+import { Email } from '@Domain/value-objects/email.value-object'
+import { HashedPassword } from '@Domain/value-objects/hashed-password.value-object'
+import { UserId } from '@Domain/value-objects/user-id.value-object'
+import { User } from '@Domain/entities/user.entity'
 import {
   CreateUserController,
   DeleteUserController,

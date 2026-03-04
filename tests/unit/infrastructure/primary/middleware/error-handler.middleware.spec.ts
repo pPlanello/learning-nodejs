@@ -2,9 +2,9 @@ import {
   DuplicateEmailException,
   InvalidUserIdException,
   UserNotFoundException,
-} from '@Domain/user/user.exceptions'
-import { InvalidEmailFormatException } from '@Domain/user/value-objects/email.value-object'
-import { WeakPasswordException } from '@Domain/user/value-objects/hashed-password.value-object'
+} from '@Domain/exceptions/user.exceptions'
+import { InvalidEmailFormatException } from '@Domain/value-objects/email.value-object'
+import { WeakPasswordException } from '@Domain/value-objects/hashed-password.value-object'
 import { BadRequestException } from '@Infrastructure/primary/exceptions/bad-request.exception'
 import { errorHandlerMiddleware } from '@Infrastructure/primary/middleware/error-handler.middleware'
 
@@ -20,7 +20,7 @@ describe('errorHandlerMiddleware', () => {
     [new WeakPasswordException(), 400],
     [new InvalidUserIdException('bad-id'), 400],
     [new BadRequestException('bad request'), 400],
-    [new UserNotFoundException('user-id'), 404],
+    [new UserNotFoundException('entities-id'), 404],
     [new DuplicateEmailException('email@example.com'), 409],
   ])('maps %s to status %i', (error, expectedStatus) => {
     const req = { traceId: 'trace-1' }

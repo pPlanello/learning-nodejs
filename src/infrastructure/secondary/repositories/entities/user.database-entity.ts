@@ -6,10 +6,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { User } from '@Domain/user/user.entity'
-import { UserId } from '@Domain/user/value-objects/user-id.value-object'
-import { Email } from '@Domain/user/value-objects/email.value-object'
-import { HashedPassword } from '@Domain/user/value-objects/hashed-password.value-object'
+import { User } from '@Domain/entities/user.entity'
+import { UserId } from '@Domain/value-objects/user-id.value-object'
+import { Email } from '@Domain/value-objects/email.value-object'
+import { HashedPassword } from '@Domain/value-objects/hashed-password.value-object'
 
 @Entity({ name: 'users' })
 export class UserDatabaseEntity {

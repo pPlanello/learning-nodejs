@@ -1,4 +1,4 @@
-import { Email, InvalidEmailFormatException } from '@Domain/user/value-objects/email.value-object'
+import { Email, InvalidEmailFormatException } from '@Domain/value-objects/email.value-object'
 
 describe('Email', () => {
   it('normalizes email to lowercase and trims whitespace', () => {
@@ -8,8 +8,8 @@ describe('Email', () => {
   })
 
   it('compares equality by normalized value', () => {
-    const left = new Email('user@example.com')
-    const right = new Email('USER@example.com')
+    const left = new Email('USER@example.com')
+    const right = new Email('user@example.com')
 
     expect(left.equals(right)).toBe(true)
   })

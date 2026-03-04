@@ -3,7 +3,7 @@ import { hashSync } from 'bcryptjs'
 import {
   HashedPassword,
   WeakPasswordException,
-} from '@Domain/user/value-objects/hashed-password.value-object'
+} from '@Domain/value-objects/hashed-password.value-object'
 
 describe('HashedPassword', () => {
   const originalSaltRounds = process.env.HASH_SALT_ROUNDS

@@ -1,7 +1,7 @@
-import { Email } from '@Domain/user/value-objects/email.value-object'
-import { HashedPassword } from '@Domain/user/value-objects/hashed-password.value-object'
-import { UserId } from '@Domain/user/value-objects/user-id.value-object'
-import { User } from '@Domain/user/user.entity'
+import { Email } from '@Domain/value-objects/email.value-object'
+import { HashedPassword } from '@Domain/value-objects/hashed-password.value-object'
+import { UserId } from '@Domain/value-objects/user-id.value-object'
+import { User } from '@Domain/entities/user.entity'
 
 jest.mock('@Infrastructure/config/database.config', () => ({
   AppDataSource: {
@@ -16,7 +16,7 @@ const createDomainUser = () =>
   new User(
     new UserId(),
     'Repo User',
-    new Email('repo.user@example.com'),
+    new Email('repo.entities@example.com'),
     new HashedPassword('SecurePass123!'),
   )
 
@@ -136,7 +136,7 @@ describe('UserDatabaseRepository', () => {
     expect(result.data).toHaveLength(1)
   })
 
-  it('updates user and throws if user does not exist', async () => {
+  it('updates entities and throws if entities does not exist', async () => {
     const repository = new UserDatabaseRepository()
     const user = createDomainUser()
 
@@ -157,6 +157,6 @@ describe('UserDatabaseRepository', () => {
     const updated = await repository.update(user)
     expect(updated.id.toString()).toBe(user.id.toString())
 
-    await expect(repository.update(user)).rejects.toThrow('Unable to reload updated user')
+    await expect(repository.update(user)).rejects.toThrow('Unable to reload updated entities')
   })
 })

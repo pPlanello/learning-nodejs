@@ -1,7 +1,7 @@
-import { type Email } from './value-objects/email.value-object'
-import { type HashedPassword } from './value-objects/hashed-password.value-object'
-import { type UserId } from './value-objects/user-id.value-object'
-import { InvalidUserStatusException } from './user.exceptions'
+import { type Email } from '@Domain/value-objects/email.value-object'
+import { type HashedPassword } from '@Domain/value-objects/hashed-password.value-object'
+import { type UserId } from '@Domain/value-objects/user-id.value-object'
+import { InvalidUserStatusException } from '../exceptions/user.exceptions'
 
 export type UserStatus = 'active' | 'suspended' | 'pending_verification'
 

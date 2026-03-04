@@ -6,7 +6,7 @@ import { GetAllUsersUseCase } from '@Application/user/use-cases/get-all-users.us
 import { GetUserUseCase } from '@Application/user/use-cases/get-user.use-case'
 import { UpdateUserUseCase } from '@Application/user/use-cases/update-user.use-case'
 import { type ILogger } from '@Domain/common/logger.port'
-import { type IUserRepository } from '@Domain/user/ports/user.repository.port'
+import { type UserRepository } from '@Domain/repositories/user.repository'
 import { PinoLoggerAdapter } from '@Infrastructure/adapters/pino-logger.adapter'
 import { UserDatabaseRepository } from '@Infrastructure/secondary/repositories/user.database-repository'
 
@@ -19,7 +19,7 @@ import {
 } from '../../controllers/user.controller'
 
 export interface UserRoutesDependencies {
-  userRepository?: IUserRepository
+  userRepository?: UserRepository
   logger?: ILogger
 }
 

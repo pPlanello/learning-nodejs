@@ -1,5 +1,5 @@
-import { InvalidUserIdException } from '@Domain/user/user.exceptions'
-import { UserId } from '@Domain/user/value-objects/user-id.value-object'
+import { InvalidUserIdException } from '@Domain/exceptions/user.exceptions'
+import { UserId } from '@Domain/value-objects/user-id.value-object'
 
 describe('UserId', () => {
   it('generates a valid uuid when no value is provided', () => {

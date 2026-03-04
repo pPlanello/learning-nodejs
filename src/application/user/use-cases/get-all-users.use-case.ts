@@ -1,12 +1,12 @@
 import { type ILogger } from '@Domain/common/logger.port'
-import { type IUserRepository } from '@Domain/user/ports/user.repository.port'
-import { type User } from '@Domain/user/user.entity'
+import { type UserRepository } from '@Domain/repositories/user.repository'
+import { type User } from '@Domain/entities/user.entity'
 
 import { type GetAllUsersQuery } from '../dtos/get-all-users.dto'
 
 export class GetAllUsersUseCase {
   constructor(
-    private readonly userRepository: IUserRepository,
+    private readonly userRepository: UserRepository,
     private readonly logger: ILogger,
   ) {}
 

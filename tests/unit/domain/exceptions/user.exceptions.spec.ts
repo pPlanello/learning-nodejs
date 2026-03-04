@@ -3,9 +3,9 @@ import {
   InvalidUserIdException,
   InvalidUserStatusException,
   UserNotFoundException,
-} from '@Domain/user/user.exceptions'
+} from '@Domain/exceptions/user.exceptions'
 
-describe('user exceptions', () => {
+describe('entities exceptions', () => {
   it('builds UserNotFoundException', () => {
     const error = new UserNotFoundException('id-1')
     expect(error.name).toBe('UserNotFoundException')

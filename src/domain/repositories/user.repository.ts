@@ -1,6 +1,6 @@
-import { type User } from '../user.entity'
-import { type Email } from '../value-objects/email.value-object'
-import { type UserId } from '../value-objects/user-id.value-object'
+import { type User } from '@Domain/entities/user.entity'
+import { type Email } from '@Domain/value-objects/email.value-object'
+import { type UserId } from '@Domain/value-objects/user-id.value-object'
 
 export interface FindAllUsersOptions {
   page: number
@@ -17,7 +17,7 @@ export interface FindAllUsersResult {
   total: number
 }
 
-export interface IUserRepository {
+export interface UserRepository {
   create: (user: User) => Promise<User>
   findById: (id: UserId) => Promise<User | null>
   findByEmail: (email: Email) => Promise<User | null>

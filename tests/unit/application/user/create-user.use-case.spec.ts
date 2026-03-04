@@ -2,21 +2,21 @@ import { type ILogger } from '@Domain/common/logger.port'
 import {
   type FindAllUsersResult,
   type FindAllUsersOptions,
-  type IUserRepository,
-} from '@Domain/user/ports/user.repository.port'
-import { Email, InvalidEmailFormatException } from '@Domain/user/value-objects/email.value-object'
+  type UserRepository,
+} from '@Domain/repositories/user.repository'
+import { Email, InvalidEmailFormatException } from '@Domain/value-objects/email.value-object'
 import {
   HashedPassword,
   WeakPasswordException,
-} from '@Domain/user/value-objects/hashed-password.value-object'
-import { UserId } from '@Domain/user/value-objects/user-id.value-object'
-import { User } from '@Domain/user/user.entity'
-import { DuplicateEmailException } from '@Domain/user/user.exceptions'
+} from '@Domain/value-objects/hashed-password.value-object'
+import { UserId } from '@Domain/value-objects/user-id.value-object'
+import { User } from '@Domain/entities/user.entity'
+import { DuplicateEmailException } from '@Domain/exceptions/user.exceptions'
 
 import { CreateUserUseCase } from '@Application/user/use-cases/create-user.use-case'
 
 describe('CreateUserUseCase', () => {
-  let userRepository: jest.Mocked<IUserRepository>
+  let userRepository: jest.Mocked<UserRepository>
   let logger: jest.Mocked<ILogger>
   let useCase: CreateUserUseCase
 
@@ -44,7 +44,7 @@ describe('CreateUserUseCase', () => {
     useCase = new CreateUserUseCase(userRepository, logger)
   })
 
-  it('creates a user when email is unique', async () => {
+  it('creates a entities when email is unique', async () => {
     const result = await useCase.execute({
       name: 'John Doe',
       email: 'john.doe@example.com',
@@ -59,7 +59,7 @@ describe('CreateUserUseCase', () => {
     expect(logger.info).toHaveBeenCalledTimes(1)
   })
 
-  it('throws DuplicateEmailException when an active user with same email exists', async () => {
+  it('throws DuplicateEmailException when an active entities with same email exists', async () => {
     userRepository.findByEmail.mockResolvedValue(
       new User(
         new UserId(),
@@ -80,7 +80,7 @@ describe('CreateUserUseCase', () => {
     expect(userRepository.create).not.toHaveBeenCalled()
   })
 
-  it('allows creating a user when the existing user with same email is deleted', async () => {
+  it('allows creating a entities when the existing entities with same email is deleted', async () => {
     const deletedUser = new User(
       new UserId(),
       'Deleted User',

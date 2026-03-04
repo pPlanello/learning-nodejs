@@ -2,18 +2,18 @@ import { type ILogger } from '@Domain/common/logger.port'
 import {
   type FindAllUsersOptions,
   type FindAllUsersResult,
-  type IUserRepository,
-} from '@Domain/user/ports/user.repository.port'
-import { Email } from '@Domain/user/value-objects/email.value-object'
-import { HashedPassword } from '@Domain/user/value-objects/hashed-password.value-object'
-import { UserId } from '@Domain/user/value-objects/user-id.value-object'
-import { User } from '@Domain/user/user.entity'
-import { InvalidUserIdException, UserNotFoundException } from '@Domain/user/user.exceptions'
+  type UserRepository,
+} from '@Domain/repositories/user.repository'
+import { Email } from '@Domain/value-objects/email.value-object'
+import { HashedPassword } from '@Domain/value-objects/hashed-password.value-object'
+import { UserId } from '@Domain/value-objects/user-id.value-object'
+import { User } from '@Domain/entities/user.entity'
+import { InvalidUserIdException, UserNotFoundException } from '@Domain/exceptions/user.exceptions'
 
 import { DeleteUserUseCase } from '@Application/user/use-cases/delete-user.use-case'
 
 describe('DeleteUserUseCase', () => {
-  let userRepository: jest.Mocked<IUserRepository>
+  let userRepository: jest.Mocked<UserRepository>
   let logger: jest.Mocked<ILogger>
   let useCase: DeleteUserUseCase
 
@@ -41,11 +41,11 @@ describe('DeleteUserUseCase', () => {
     useCase = new DeleteUserUseCase(userRepository, logger)
   })
 
-  it('deletes an existing active user', async () => {
+  it('deletes an existing active entities', async () => {
     const user = new User(
       new UserId(),
       'Delete User',
-      new Email('delete.user@example.com'),
+      new Email('delete.entities@example.com'),
       new HashedPassword('SecurePass123!'),
     )
 
@@ -58,7 +58,7 @@ describe('DeleteUserUseCase', () => {
     expect(logger.debug).toHaveBeenCalledTimes(2)
   })
 
-  it('throws UserNotFoundException when user does not exist', async () => {
+  it('throws UserNotFoundException when entities does not exist', async () => {
     userRepository.findById.mockResolvedValue(null)
 
     await expect(useCase.execute('44444444-4444-4444-8444-444444444444')).rejects.toBeInstanceOf(
@@ -68,7 +68,7 @@ describe('DeleteUserUseCase', () => {
     expect(userRepository.update).not.toHaveBeenCalled()
   })
 
-  it('throws UserNotFoundException when user is already deleted', async () => {
+  it('throws UserNotFoundException when entities is already deleted', async () => {
     const user = new User(
       new UserId(),
       'Already Deleted',

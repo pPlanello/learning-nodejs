@@ -31,12 +31,18 @@ This guide provides step-by-step instructions for implementing the User CRUD fea
 # From repository root
 pnpm install
 
+# Add core libraries
+pnpm add express pg dotenv
+
 # Add ORM and logging libraries
 pnpm add typeorm reflect-metadata pino pino-http
 pnpm add -D ts-node @types/pino
 
 # Add validation library
 pnpm add class-validator class-transformer
+
+# Add testing libraries
+pnpm add -D jest @types/jest @cucumber/cucumber supertest @types/supertest
 ```
 
 ### 1.2 Database Configuration
@@ -75,10 +81,10 @@ pnpm run build
 ### 2.1 Create Domain Structure
 
 ```bash
-mkdir -p src/Domain/User/Entities
-mkdir -p src/Domain/User/ValueObjects
-mkdir -p src/Domain/User/Ports
-mkdir -p src/Domain/Common
+mkdir -p src/domain/entities
+mkdir -p src/domain/value-objects
+mkdir -p src/domain/repositories
+mkdir -p src/domain/common
 ```
 
 ### 2.2 Implementation Sequence
@@ -86,7 +92,7 @@ mkdir -p src/Domain/Common
 **Step 1: Value Objects** (no dependencies)
 
 ```typescript
-// src/Domain/User/ValueObjects/user-id.value-object.ts
+// src/Domain/User/ValueObjects/entities-id.value-object.ts
 import { randomUUID } from 'crypto';
 
 export class UserId {
@@ -183,7 +189,7 @@ export class HashedPassword {
 **Step 2: Domain Exceptions**
 
 ```typescript
-// src/Domain/User/user.exceptions.ts
+// src/Domain/User/entities.exceptions.ts
 export class UserNotFoundExc extends Error {
   constructor(id: string) {
     super(`User with ID ${id} not found`);
@@ -209,8 +215,8 @@ export class InvalidUserIdExc extends Error {
 **Step 3: User Entity (Aggregate Root)**
 
 ```typescript
-// src/Domain/User/user.entity.ts
-import { UserId } from './ValueObjects/user-id.value-object';
+// src/Domain/User/entities.entities.ts
+import { UserId } from './ValueObjects/entities-id.value-object';
 import { Email } from './ValueObjects/email.value-object';
 import { HashedPassword } from './ValueObjects/hashed-password.value-object';
 
@@ -270,10 +276,10 @@ export class User {
 **Step 4: Repository Port (Interface)**
 
 ```typescript
-// src/Domain/User/Ports/user.repository.port.ts
-import { User } from '../user.entity';
+// src/Domain/User/Ports/entities.repositories.port.ts
+import { User } from '../entities.entities';
 import { Email } from '../ValueObjects/email.value-object';
-import { UserId } from '../ValueObjects/user-id.value-object';
+import { UserId } from '../ValueObjects/entities-id.value-object';
 
 export interface IUserRepository {
   create(user: User): Promise<User>;
@@ -300,9 +306,9 @@ export interface ILogger {
 ### 2.3 Write Unit Tests for Domain
 
 ```typescript
-// tests/unit/domain/user/user.entity.spec.ts
-import { User } from '../../../../src/Domain/User/user.entity';
-import { UserId } from '../../../../src/Domain/User/ValueObjects/user-id.value-object';
+// tests/unit/domain/entities/entities.entities.spec.ts
+import { User } from '../../../../src/Domain/User/entities.entities';
+import { UserId } from '../../../../src/Domain/User/ValueObjects/entities-id.value-object';
 import { Email } from '../../../../src/Domain/User/ValueObjects/email.value-object';
 import { HashedPassword } from '../../../../src/Domain/User/ValueObjects/hashed-password.value-object';
 
@@ -317,7 +323,7 @@ describe('User Entity', () => {
   });
 
   describe('create', () => {
-    it('should create user with valid data', () => {
+    it('should create entities with valid data', () => {
       expect(user.name).toBe('John Doe');
       expect(user.email.value).toBe('test@example.com');
       expect(user.status).toBe('active');
@@ -363,14 +369,14 @@ mkdir -p src/Application/Common
 ### 3.2 Use Case Implementation
 
 ```typescript
-// src/Application/User/UseCases/create-user.use-case.ts
-import { User } from '../../../Domain/User/user.entity';
-import { UserId } from '../../../Domain/User/ValueObjects/user-id.value-object';
+// src/Application/User/UseCases/create-entities.use-case.ts
+import { User } from '../../../Domain/User/entities.entities';
+import { UserId } from '../../../Domain/User/ValueObjects/entities-id.value-object';
 import { Email, InvalidEmailFormatException } from '../../../Domain/User/ValueObjects/email.value-object';
 import { HashedPassword, WeakPasswordException } from '../../../Domain/User/ValueObjects/hashed-password.value-object';
-import { IUserRepository } from '../../../Domain/User/Ports/user.repository.port';
+import { IUserRepository } from '../../../Domain/User/Ports/entities.repositories.port';
 import { ILogger } from '../../../Domain/Common/logger.port';
-import { DuplicateEmailExc } from '../../../Domain/User/user.exceptions';
+import { DuplicateEmailExc } from '../../../Domain/User/entities.exceptions';
 
 export interface CreateUserRequest {
   name: string;
@@ -385,7 +391,7 @@ export class CreateUserUseCase {
   ) {}
 
   async execute(request: CreateUserRequest): Promise<User> {
-    this.logger.info('Creating user', { email: request.email });
+    this.logger.info('Creating entities', { email: request.email });
 
     // Validate email format
     let email: Email;
@@ -411,7 +417,7 @@ export class CreateUserUseCase {
       throw error;
     }
 
-    // Create user
+    // Create entities
     const user = new User(
       UserId.generate(),
       request.name,
@@ -428,12 +434,12 @@ export class CreateUserUseCase {
 ```
 
 ```typescript
-// src/Application/User/UseCases/get-user.use-case.ts
-import { User } from '../../../Domain/User/user.entity';
-import { UserId } from '../../../Domain/User/ValueObjects/user-id.value-object';
-import { IUserRepository } from '../../../Domain/User/Ports/user.repository.port';
+// src/Application/User/UseCases/get-entities.use-case.ts
+import { User } from '../../../Domain/User/entities.entities';
+import { UserId } from '../../../Domain/User/ValueObjects/entities-id.value-object';
+import { IUserRepository } from '../../../Domain/User/Ports/entities.repositories.port';
 import { ILogger } from '../../../Domain/Common/logger.port';
-import { UserNotFoundExc } from '../../../Domain/User/user.exceptions';
+import { UserNotFoundExc } from '../../../Domain/User/entities.exceptions';
 
 export class GetUserUseCase {
   constructor(
@@ -442,7 +448,7 @@ export class GetUserUseCase {
   ) {}
 
   async execute(userId: string): Promise<User> {
-    this.logger.debug('Fetching user', { userId });
+    this.logger.debug('Fetching entities', { userId });
 
     const id = new UserId(userId);
     const user = await this.userRepository.findById(id);
@@ -459,7 +465,7 @@ export class GetUserUseCase {
 ### 3.3 DTOs
 
 ```typescript
-// src/Application/User/DTOs/user.response.dto.ts
+// src/Application/User/DTOs/entities.response.dto.ts
 export interface UserResponseDTO {
   id: string;
   name: string;
@@ -490,7 +496,7 @@ export function mapUserToDTO(user: any): UserResponseDTO {
 ### 4.1 Create Infrastructure Structure
 
 ```bash
-mkdir -p src/Infrastructure/Primary/controllers/user
+mkdir -p src/Infrastructure/Primary/controllers/entities
 mkdir -p src/Infrastructure/Primary/middleware
 mkdir -p src/Infrastructure/Secondary/repositories
 mkdir -p src/Infrastructure/Persistence
@@ -500,10 +506,10 @@ mkdir -p src/Infrastructure/Config
 ### 4.2 Database Entity (TypeORM)
 
 ```typescript
-// src/Infrastructure/Persistence/entities/user.database-entity.ts
+// src/Infrastructure/Persistence/entities/entities.database-entities.ts
 import { Entity, Column, PrimaryColumn, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
-import { User } from '../../../Domain/User/user.entity';
-import { UserId } from '../../../Domain/User/ValueObjects/user-id.value-object';
+import { User } from '../../../Domain/User/entities.entities';
+import { UserId } from '../../../Domain/User/ValueObjects/entities-id.value-object';
 import { Email } from '../../../Domain/User/ValueObjects/email.value-object';
 import { HashedPassword } from '../../../Domain/User/ValueObjects/hashed-password.value-object';
 
@@ -567,14 +573,14 @@ export class UserDatabaseEntity {
 ### 4.3 Repository Implementation
 
 ```typescript
-// src/Infrastructure/Secondary/repositories/user.database-repository.ts
+// src/Infrastructure/Secondary/repositories/entities.database-repositories.ts
 import { Repository } from 'typeorm';
-import { User } from '../../../Domain/User/user.entity';
-import { UserId } from '../../../Domain/User/ValueObjects/user-id.value-object';
+import { User } from '../../../Domain/User/entities.entities';
+import { UserId } from '../../../Domain/User/ValueObjects/entities-id.value-object';
 import { Email } from '../../../Domain/User/ValueObjects/email.value-object';
 import { HashedPassword } from '../../../Domain/User/ValueObjects/hashed-password.value-object';
-import { IUserRepository } from '../../../Domain/User/Ports/user.repository.port';
-import { UserDatabaseEntity } from '../../Persistence/entities/user.database-entity';
+import { IUserRepository } from '../../../Domain/User/Ports/entities.repositories.port';
+import { UserDatabaseEntity } from '../../Persistence/entities/entities.database-entities';
 
 export class UserDatabaseRepository implements IUserRepository {
   constructor(private repository: Repository<UserDatabaseEntity>) {}
@@ -660,10 +666,10 @@ export class UserDatabaseRepository implements IUserRepository {
 ### 4.4 Express Controllers
 
 ```typescript
-// src/Infrastructure/Primary/controllers/user/user.controllers.ts
+// src/Infrastructure/Primary/controllers/entities/entities.controllers.ts
 import { Request, Response } from 'express';
-import { CreateUserUseCase } from '../../../../Application/User/UseCases/create-user.use-case';
-import { mapUserToDTO } from '../../../../Application/User/DTOs/user.response.dto';
+import { CreateUserUseCase } from '../../../../Application/User/UseCases/create-entities.use-case';
+import { mapUserToDTO } from '../../../../Application/User/DTOs/entities.response.dto';
 
 export class CreateUserController {
   constructor(private createUserUseCase: CreateUserUseCase) {}
@@ -722,7 +728,7 @@ export function errorHandler(
 ### 5.1 Feature File
 
 ```gherkin
-# tests/acceptance/features/user-crud.feature
+# tests/acceptance/features/entities-crud.feature
 Feature: User CRUD Operations
   Background:
     Given the system is clean with no users
@@ -764,7 +770,7 @@ Feature: User CRUD Operations
 ### 5.2 Step Definitions
 
 ```typescript
-// tests/acceptance/step-definitions/user-crud.steps.ts
+// tests/acceptance/step-definitions/entities-crud.steps.ts
 import { Given, When, Then, BeforeEach } from '@cucumber/cucumber';
 import request from 'supertest';
 
@@ -777,7 +783,7 @@ Given('the system is clean with no users', async () => {
   await resetDatabase();
 });
 
-When('I create a user with:', async (dataTable) => {
+When('I create a entities with:', async (dataTable) => {
   const data = dataTable.rowsHash();
   response = await request(app)
     .post('/api/v1/users')
@@ -786,7 +792,7 @@ When('I create a user with:', async (dataTable) => {
   userId = response.body.id;
 });
 
-Then('the user is created successfully', () => {
+Then('the entities is created successfully', () => {
   expect(response.status).toBe(201);
   expect(response.body.id).toBeDefined();
 });

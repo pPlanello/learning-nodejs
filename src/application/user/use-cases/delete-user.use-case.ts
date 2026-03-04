@@ -1,11 +1,11 @@
 import { type ILogger } from '@Domain/common/logger.port'
-import { type IUserRepository } from '@Domain/user/ports/user.repository.port'
-import { UserId } from '@Domain/user/value-objects/user-id.value-object'
-import { UserNotFoundException } from '@Domain/user/user.exceptions'
+import { type UserRepository } from '@Domain/repositories/user.repository'
+import { UserId } from '@Domain/value-objects/user-id.value-object'
+import { UserNotFoundException } from '@Domain/exceptions/user.exceptions'
 
 export class DeleteUserUseCase {
   constructor(
-    private readonly userRepository: IUserRepository,
+    private readonly userRepository: UserRepository,
     private readonly logger: ILogger,
   ) {}
 

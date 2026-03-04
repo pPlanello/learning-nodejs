@@ -1,7 +1,7 @@
-import { Email } from '@Domain/user/value-objects/email.value-object'
-import { HashedPassword } from '@Domain/user/value-objects/hashed-password.value-object'
-import { UserId } from '@Domain/user/value-objects/user-id.value-object'
-import { User } from '@Domain/user/user.entity'
+import { Email } from '@Domain/value-objects/email.value-object'
+import { HashedPassword } from '@Domain/value-objects/hashed-password.value-object'
+import { UserId } from '@Domain/value-objects/user-id.value-object'
+import { User } from '@Domain/entities/user.entity'
 
 const hasDatabaseUrl = process.env.DATABASE_URL !== undefined
 
@@ -38,11 +38,11 @@ describeIfDatabase('UserDatabaseRepository', () => {
     }
   })
 
-  it('creates and reads a user', async () => {
+  it('creates and reads a entities', async () => {
     const user = new User(
       new UserId(),
       'Integration User',
-      new Email('integration.user@example.com'),
+      new Email('integration.entities@example.com'),
       new HashedPassword('SecurePass123!'),
     )
 
@@ -50,6 +50,6 @@ describeIfDatabase('UserDatabaseRepository', () => {
     const found = await repository.findById(created.id)
 
     expect(found).not.toBeNull()
-    expect(found?.email.toString()).toBe('integration.user@example.com')
+    expect(found?.email.toString()).toBe('integration.entities@example.com')
   })
 })

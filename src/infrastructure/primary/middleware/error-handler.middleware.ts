@@ -1,11 +1,11 @@
-import { InvalidEmailFormatException } from '@Domain/user/value-objects/email.value-object'
-import { WeakPasswordException } from '@Domain/user/value-objects/hashed-password.value-object'
+import { InvalidEmailFormatException } from '@Domain/value-objects/email.value-object'
+import { WeakPasswordException } from '@Domain/value-objects/hashed-password.value-object'
 import {
   DuplicateEmailException,
   InvalidUserIdException,
   InvalidUserStatusException,
   UserNotFoundException,
-} from '@Domain/user/user.exceptions'
+} from '@Domain/exceptions/user.exceptions'
 import { type NextFunction, type Request, type Response } from 'express'
 
 import { BadRequestException } from '../exceptions/bad-request.exception'

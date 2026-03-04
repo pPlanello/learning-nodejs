@@ -128,7 +128,7 @@ src/
 │   │   │   ├── password.value-object.ts   # Password hashing/validation
 │   │   │   └── user-id.value-object.ts    # User ID type safety
 │   │   └── ports/
-│   │       └── user.repository.port.ts    # Interface (no implementation) 
+│   │       └── user.repository.ts    # Interface (no implementation) 
 │   │
 │   └── common/
 │       ├── domain-event.ts                # Base domain event class

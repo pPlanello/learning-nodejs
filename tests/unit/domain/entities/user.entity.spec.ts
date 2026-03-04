@@ -1,11 +1,11 @@
-import { Email } from '@Domain/user/value-objects/email.value-object'
-import { HashedPassword } from '@Domain/user/value-objects/hashed-password.value-object'
-import { UserId } from '@Domain/user/value-objects/user-id.value-object'
-import { User } from '@Domain/user/user.entity'
-import { InvalidUserStatusException } from '@Domain/user/user.exceptions'
+import { Email } from '@Domain/value-objects/email.value-object'
+import { HashedPassword } from '@Domain/value-objects/hashed-password.value-object'
+import { UserId } from '@Domain/value-objects/user-id.value-object'
+import { User } from '@Domain/entities/user.entity'
+import { InvalidUserStatusException } from '@Domain/exceptions/user.exceptions'
 
 describe('User', () => {
-  it('creates an active user by default', () => {
+  it('creates an active entities by default', () => {
     const user = new User(
       new UserId(),
       'John Doe',
@@ -73,7 +73,7 @@ describe('User', () => {
     expect(() => user.updateStatus('bad-status' as never)).toThrow(InvalidUserStatusException)
   })
 
-  it('soft deletes user', () => {
+  it('soft deletes entities', () => {
     const user = new User(
       new UserId(),
       'John Doe',

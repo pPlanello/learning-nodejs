@@ -1,16 +1,16 @@
 import { type ILogger } from '@Domain/common/logger.port'
-import { type IUserRepository } from '@Domain/user/ports/user.repository.port'
-import { Email } from '@Domain/user/value-objects/email.value-object'
-import { HashedPassword } from '@Domain/user/value-objects/hashed-password.value-object'
-import { User } from '@Domain/user/user.entity'
-import { DuplicateEmailException } from '@Domain/user/user.exceptions'
-import { UserId } from '@Domain/user/value-objects/user-id.value-object'
+import { type UserRepository } from '@Domain/repositories/user.repository'
+import { Email } from '@Domain/value-objects/email.value-object'
+import { HashedPassword } from '@Domain/value-objects/hashed-password.value-object'
+import { User } from '@Domain/entities/user.entity'
+import { DuplicateEmailException } from '@Domain/exceptions/user.exceptions'
+import { UserId } from '@Domain/value-objects/user-id.value-object'
 
 import { type CreateUserRequest } from '../dtos/create-user.dto'
 
 export class CreateUserUseCase {
   constructor(
-    private readonly userRepository: IUserRepository,
+    private readonly userRepository: UserRepository,
     private readonly logger: ILogger,
   ) {}
 

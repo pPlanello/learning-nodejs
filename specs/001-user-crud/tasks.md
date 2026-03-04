@@ -50,9 +50,11 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 
 ## Phase 1: Project Setup
 
-- [x] T001 Create directory structure per plan for src/Domain, src/Application, src/Infrastructure, tests/
-- [x] T002 [P] Install dependencies: typeorm, pino, pino-http, class-validator, reflect-metadata
+- [x] T001 Create directory structure per plan for src/domain, src/application, src/infrastructure, tests/
+- [x] T002 [P] Install dependencies: express, pg, dotenv, typeorm, pino, pino-http, class-validator, reflect-metadata
 - [x] T003 Create .env file with DATABASE_URL, NODE_ENV, LOG_LEVEL, PORT
+
+> **Note:** Run `pnpm install` before installing additional dependencies.
 
 ---
 
@@ -85,7 +87,7 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 ### Domain Entity & Ports
 
 - [x] T017 Create User aggregate root entity in src/Domain/User/user.entity.ts with all properties and methods (isActive, updateProfile, updateEmail, delete)
-- [x] T018 Create IUserRepository port interface in src/Domain/User/Ports/user.repository.port.ts with CRUD method signatures
+- [x] T018 Create IUserRepository port interface in src/Domain/User/Ports/user.repository.ts with CRUD method signatures
 - [x] T019 [P] Create ILogger port interface in src/Domain/Common/logger.port.ts
 
 ### Domain Layer Tests
@@ -458,27 +460,27 @@ Feature: User CRUD Operations
 ### Happy Path (All Operations Succeed)
 
 ```bash
-# 1. Create user
+# 1. Create entities
 curl -X POST http://localhost:3000/api/v1/users \
   -H "Content-Type: application/json" \
   -d '{"name":"John Doe","email":"john@example.com","password":"SecurePass123!"}'
-# ✓ Expect: 201 Conflict + user ID
+# ✓ Expect: 201 Conflict + entities ID
 
-# 2. Get user
+# 2. Get entities
 curl -X GET http://localhost:3000/api/v1/users/{id}
-# ✓ Expect: 200 OK + user data (no password_hash)
+# ✓ Expect: 200 OK + entities data (no password_hash)
 
 # 3. Get all users
 curl -X GET http://localhost:3000/api/v1/users?page=1&limit=10
 # ✓ Expect: 200 OK + data array + pagination metadata
 
-# 4. Update user
+# 4. Update entities
 curl -X PATCH http://localhost:3000/api/v1/users/{id} \
   -H "Content-Type: application/json" \
   -d '{"name":"Jane Doe"}'
-# ✓ Expect: 200 OK + updated user
+# ✓ Expect: 200 OK + updated entities
 
-# 5. Delete user
+# 5. Delete entities
 curl -X DELETE http://localhost:3000/api/v1/users/{id}
 # ✓ Expect: 204 No Content
 
@@ -514,4 +516,3 @@ curl -X POST http://localhost:3000/api/v1/users \
   -d '{"name":"John","email":"john3@example.com"}'
 # ✓ Expect: 400 Bad Request + Missing password field error
 ```
-

@@ -1,17 +1,17 @@
 import {
   type FindAllUsersOptions,
   type FindAllUsersResult,
-  type IUserRepository,
-} from '@Domain/user/ports/user.repository.port'
-import { Email } from '@Domain/user/value-objects/email.value-object'
-import { UserId } from '@Domain/user/value-objects/user-id.value-object'
-import { User } from '@Domain/user/user.entity'
+  type UserRepository,
+} from '@Domain/repositories/user.repository'
+import { Email } from '@Domain/value-objects/email.value-object'
+import { UserId } from '@Domain/value-objects/user-id.value-object'
+import { User } from '@Domain/entities/user.entity'
 import { AppDataSource } from '@Infrastructure/config/database.config'
 import { type Repository } from 'typeorm'
 
 import { UserDatabaseEntity } from '@Infrastructure/secondary/repositories/entities/user.database-entity'
 
-export class UserDatabaseRepository implements IUserRepository {
+export class UserDatabaseRepository implements UserRepository {
   private readonly repository: Repository<UserDatabaseEntity>
 
   constructor() {
@@ -82,7 +82,7 @@ export class UserDatabaseRepository implements IUserRepository {
     const refreshed = await this.findById(user.id)
 
     if (refreshed === null) {
-      throw new Error('Unable to reload updated user')
+      throw new Error('Unable to reload updated entities')
     }
 
     return refreshed

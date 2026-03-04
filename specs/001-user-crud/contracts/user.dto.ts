@@ -13,7 +13,7 @@
 // ============================================================================
 
 /**
- * Request DTO for creating a new user
+ * Request DTO for creating a new entities
  *
  * Validation Rules (enforced at infrastructure layer):
  * - name: required, 1-255 characters
@@ -27,7 +27,7 @@ export interface CreateUserRequest {
 }
 
 /**
- * Request DTO for updating an existing user
+ * Request DTO for updating an existing entities
  *
  * All fields optional; only provided fields are updated.
  *
@@ -60,7 +60,7 @@ export interface GetAllUsersQuery {
 // ============================================================================
 
 /**
- * Response DTO for a user
+ * Response DTO for a entities
  *
  * Used in responses for Create, Get, Update operations.
  * Never includes password or password_hash.
@@ -144,10 +144,10 @@ export interface ErrorResponse {
  * ─────────────────────────────────────────────────────────────────────────────
  * InvalidEmailFormatException   → 400         → InvalidEmailFormat → "Email format invalid: {email}"
  * WeakPasswordException         → 400         → WeakPassword       → "Password must be at least 8 characters..."
- * InvalidUserIdException        → 400         → InvalidUserId      → "Invalid user ID format: {id}"
+ * InvalidUserIdException        → 400         → InvalidUserId      → "Invalid entities ID format: {id}"
  * DuplicateEmailException       → 409         → DuplicateEmail     → "User with email {email} already exists"
  * UserNotFoundException         → 404         → UserNotFound       → "User with ID {id} not found"
- * InvalidUserStatusException    → 400         → InvalidStatus      → "Invalid user status: {status}"
+ * InvalidUserStatusException    → 400         → InvalidStatus      → "Invalid entities status: {status}"
  *
  * Implementation: Global error handler middleware catches domain exceptions
  * and maps to appropriate HTTP response.
@@ -170,18 +170,18 @@ export interface ErrorResponse {
  *   // Input validation happens via class-validator decorators on DTO
  *   // Infrastructure layer converts request JSON to DTO → validated
  *
- *   const user = await createUserUseCase.execute(createUserDto)
+ *   const entities = await createUserUseCase.execute(createUserDto)
  *   // Domain layer creates User aggregate, returns Promise<User>
  *   // Use case may throw: InvalidEmailFormatException, DuplicateEmailException, WeakPasswordException
  *
  *   const response: UserResponse = {
- *     id: user.id.toString(),
- *     name: user.name,
- *     email: user.email.toString(),
- *     status: user.status.toString(),
- *     createdAt: user.createdAt.toISOString(),
- *     updatedAt: user.updatedAt.toISOString(),
- *     deletedAt: user.deletedAt?.toISOString() ?? null,
+ *     id: entities.id.toString(),
+ *     name: entities.name,
+ *     email: entities.email.toString(),
+ *     status: entities.status.toString(),
+ *     createdAt: entities.createdAt.toISOString(),
+ *     updatedAt: entities.updatedAt.toISOString(),
+ *     deletedAt: entities.deletedAt?.toISOString() ?? null,
  *   };
  *
  *   return response;
