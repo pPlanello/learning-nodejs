@@ -1,7 +1,9 @@
 import { Given } from '@cucumber/cucumber'
-import request from 'supertest'
 
-import { createUser, ensureApp, state } from '../context'
+import { ensureApp, state } from '../context'
+import { UserAcceptanceApi } from '../api/user.api'
+
+const userApi = new UserAcceptanceApi(ensureApp)
 
 Given('I have a valid create user payload', () => {
   state.createPayload = {
@@ -12,12 +14,7 @@ Given('I have a valid create user payload', () => {
 })
 
 Given('an existing user with email {string}', async (email: string) => {
-  const app = ensureApp()
-  await request(app).post('/api/v1/users').send({
-    name: 'Existing User',
-    email,
-    password: 'SecurePass123!',
-  })
+  await userApi.createDefault('Existing User', email)
 })
 
 Given('I have a create user payload with email {string}', (email: string) => {
@@ -43,13 +40,10 @@ Given('I have a create user payload with weak password', () => {
 })
 
 Given('an existing user in the system', async () => {
-  const app = ensureApp()
-  const res = await request(app).post('/api/v1/users').send({
-    name: 'Existing User',
-    email: `existing.user.${Date.now()}@example.com`,
-    password: 'SecurePass123!',
-  })
-  state.requestedUserId = res.body.id
+  state.requestedUserId = await userApi.createDefault(
+    'Existing User',
+    `existing.user.${Date.now()}@example.com`,
+  )
 })
 
 Given('I request user id {string}', (id: string) => {
@@ -57,99 +51,63 @@ Given('I request user id {string}', (id: string) => {
 })
 
 Given('a deleted user in the system', async () => {
-  const app = ensureApp()
-  const res = await request(app).post('/api/v1/users').send({
-    name: 'Deleted User',
-    email: `deleted.user.${Date.now()}@example.com`,
-    password: 'SecurePass123!',
-  })
-  await request(app).delete(`/api/v1/users/${res.body.id}`)
-  state.requestedUserId = res.body.id
+  const userId = await userApi.createDefault(
+    'Deleted User',
+    `deleted.user.${Date.now()}@example.com`,
+  )
+  await userApi.delete(userId)
+  state.requestedUserId = userId
 })
 
 Given('an existing user to update', async () => {
-  const app = ensureApp()
-  const res = await request(app).post('/api/v1/users').send({
-    name: 'Update User',
-    email: `update.user.${Date.now()}@example.com`,
-    password: 'SecurePass123!',
-  })
-  state.requestedUserId = res.body.id
+  state.requestedUserId = await userApi.createDefault(
+    'Update User',
+    `update.user.${Date.now()}@example.com`,
+  )
 })
 
 Given('another existing user with email {string}', async (email: string) => {
-  const app = ensureApp()
-  await request(app).post('/api/v1/users').send({
-    name: 'Another User',
-    email,
-    password: 'SecurePass123!',
-  })
+  await userApi.createDefault('Another User', email)
 })
 
 Given('an existing user to delete', async () => {
-  const app = ensureApp()
-  const res = await request(app).post('/api/v1/users').send({
-    name: 'Delete User',
-    email: `delete.user.${Date.now()}@example.com`,
-    password: 'SecurePass123!',
-  })
-  state.requestedUserId = res.body.id
+  state.requestedUserId = await userApi.createDefault(
+    'Delete User',
+    `delete.user.${Date.now()}@example.com`,
+  )
 })
 
 Given('an already deleted user', async () => {
-  const app = ensureApp()
-  const res = await request(app).post('/api/v1/users').send({
-    name: 'Already Deleted User',
-    email: `already.deleted.user.${Date.now()}@example.com`,
-    password: 'SecurePass123!',
-  })
-  await request(app).delete(`/api/v1/users/${res.body.id}`)
-  state.requestedUserId = res.body.id
+  const userId = await userApi.createDefault(
+    'Already Deleted User',
+    `already.deleted.user.${Date.now()}@example.com`,
+  )
+  await userApi.delete(userId)
+  state.requestedUserId = userId
 })
 
 Given('I have {int} active users in the system', async (count: number) => {
-  const app = ensureApp()
   for (let i = 0; i < count; i++) {
-    await request(app).post('/api/v1/users').send({
-      name: `Active User ${i}`,
-      email: `active.user.${i}.${Date.now()}@example.com`,
-      password: 'SecurePass123!',
-    })
+    await userApi.createDefault(`Active User ${i}`, `active.user.${i}.${Date.now()}@example.com`)
   }
 })
 
 Given('I have users with mixed statuses', async () => {
-  const app = ensureApp()
-  // Create suspended user
-  const resSuspended = await request(app).post('/api/v1/users').send({
-    name: 'Suspended User',
-    email: `suspended.user.${Date.now()}@example.com`,
-    password: 'SecurePass123!',
-  })
-  await request(app)
-    .patch(`/api/v1/users/${resSuspended.body.id}`)
-    .send({ status: 'suspended' })
-  // Create active user
-  await request(app).post('/api/v1/users').send({
-    name: 'Active User',
-    email: `active.user.${Date.now()}@example.com`,
-    password: 'SecurePass123!',
-  })
+  const suspendedUserId = await userApi.createDefault(
+    'Suspended User',
+    `suspended.user.${Date.now()}@example.com`,
+  )
+  await userApi.update(suspendedUserId, { status: 'suspended' })
+  await userApi.createDefault('Active User', `active.user.${Date.now()}@example.com`)
 })
 
 Given('I have users where one is soft deleted', async () => {
-  const app = ensureApp()
-  const res = await request(app).post('/api/v1/users').send({
-    name: 'Soft Deleted User',
-    email: `soft.deleted.user.${Date.now()}@example.com`,
-    password: 'SecurePass123!',
-  })
-  await request(app).delete(`/api/v1/users/${res.body.id}`)
-  await request(app).post('/api/v1/users').send({
-    name: 'Active User',
-    email: `active.user.${Date.now()}@example.com`,
-    password: 'SecurePass123!',
-  })
+  const deletedUserId = await userApi.createDefault(
+    'Soft Deleted User',
+    `soft.deleted.user.${Date.now()}@example.com`,
+  )
+  await userApi.delete(deletedUserId)
+  await userApi.createDefault('Active User', `active.user.${Date.now()}@example.com`)
 })
 
 Given('I have an update payload with name {string}', (name: string) => {

@@ -32,7 +32,9 @@ Then('the response should contain the requested user id', () => {
   }
 
   if (state.response.body.id !== state.requestedUserId) {
-    throw new Error(`Expected response id ${state.requestedUserId} but received ${String(state.response.body.id)}`)
+    throw new Error(
+      `Expected response id ${state.requestedUserId} but received ${String(state.response.body.id)}`,
+    )
   }
 })
 

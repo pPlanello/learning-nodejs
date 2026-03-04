@@ -196,9 +196,13 @@ src/
 tests/
 ├── acceptance/                           # Cucumber BDD E2E tests
 │   ├── features/
-│   │   └── user-crud.feature             # Gherkin scenarios for all 5 user stories
+│   │   ├── create-user.feature
+│   │   ├── get-user.feature
+│   │   ├── list-users.feature
+│   │   ├── update-user.feature
+│   │   └── delete-user.feature           # Gherkin scenarios split by CRUD operation
 │   └── step-definitions/
-│       └── user-crud.steps.ts            # Cucumber step implementations (Supertest)
+│       └── user/                         # Cucumber step implementations (Supertest)
 │
 ├── unit/                                 # Jest TDD unit tests (Domain + Application)
 │   ├── domain/

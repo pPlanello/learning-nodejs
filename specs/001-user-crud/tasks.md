@@ -153,8 +153,8 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 
 ### Feature Definition
 
-- [x] T045 [US1] Write Gherkin feature for create user in tests/acceptance/features/user-crud.feature (all 4 acceptance scenarios)
-- [x] T046 [US1] Implement step definitions for create user in tests/acceptance/step-definitions/user-crud.steps.ts using Supertest
+- [x] T045 [US1] Write Gherkin feature for create user in tests/acceptance/features/create-user.feature (all 4 acceptance scenarios)
+- [x] T046 [US1] Implement step definitions for create user in tests/acceptance/step-definitions/user/*.steps.ts using Supertest
 
 ### Controllers & Routing
 
@@ -178,8 +178,8 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 
 ### Feature Definition
 
-- [x] T054 [US2] Write Gherkin feature for get user in tests/acceptance/features/user-crud.feature (all 4 acceptance scenarios)
-- [x] T055 [US2] Implement step definitions for get user in tests/acceptance/step-definitions/user-crud.steps.ts
+- [x] T054 [US2] Write Gherkin feature for get user in tests/acceptance/features/get-user.feature (all 4 acceptance scenarios)
+- [x] T055 [US2] Implement step definitions for get user in tests/acceptance/step-definitions/user/*.steps.ts
 
 ### Controllers & Routing
 
@@ -200,8 +200,8 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 
 ### Feature Definition
 
-- [x] T063 [US3] Write Gherkin feature for get all users in tests/acceptance/features/user-crud.feature (all 4 acceptance scenarios with pagination)
-- [x] T064 [US3] Implement step definitions for get all users in tests/acceptance/step-definitions/user-crud.steps.ts
+- [x] T063 [US3] Write Gherkin feature for get all users in tests/acceptance/features/list-users.feature (all 4 acceptance scenarios with pagination)
+- [x] T064 [US3] Implement step definitions for get all users in tests/acceptance/step-definitions/user/*.steps.ts
 
 ### Controllers & Routing
 
@@ -227,8 +227,8 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 
 ### Feature Definition
 
-- [x] T074 [US4] Write Gherkin feature for update user in tests/acceptance/features/user-crud.feature (all 4 acceptance scenarios)
-- [x] T075 [US4] Implement step definitions for update user in tests/acceptance/step-definitions/user-crud.steps.ts
+- [x] T074 [US4] Write Gherkin feature for update user in tests/acceptance/features/update-user.feature (all 4 acceptance scenarios)
+- [x] T075 [US4] Implement step definitions for update user in tests/acceptance/step-definitions/user/*.steps.ts
 
 ### Controllers & Routing
 
@@ -253,8 +253,8 @@ Polish (T083-T090) [Testing, Documentation, Cleanup]
 
 ### Feature Definition
 
-- [x] T084 [US5] Write Gherkin feature for delete user in tests/acceptance/features/user-crud.feature (all 4 acceptance scenarios)
-- [x] T085 [US5] Implement step definitions for delete user in tests/acceptance/step-definitions/user-crud.steps.ts
+- [x] T084 [US5] Write Gherkin feature for delete user in tests/acceptance/features/delete-user.feature (all 4 acceptance scenarios)
+- [x] T085 [US5] Implement step definitions for delete user in tests/acceptance/step-definitions/user/*.steps.ts
 
 ### Controllers & Routing
 
@@ -411,11 +411,11 @@ Feature: User CRUD Operations
 
 ### All Acceptance Scenarios Passing
 
-- [x] **US1 Tests**: `pnpm run test:e2e -- tests/acceptance/features/user-crud.feature --name "Create"` → All 4 scenarios pass
-- [x] **US2 Tests**: `pnpm run test:e2e -- tests/acceptance/features/user-crud.feature --name "Retrieve Single"` → All 4 scenarios pass
-- [x] **US3 Tests**: `pnpm run test:e2e -- tests/acceptance/features/user-crud.feature --name "List All"` → All 4 scenarios pass
-- [x] **US4 Tests**: `pnpm run test:e2e -- tests/acceptance/features/user-crud.feature --name "Update"` → All 4 scenarios pass
-- [x] **US5 Tests**: `pnpm run test:e2e -- tests/acceptance/features/user-crud.feature --name "Delete"` → All 4 scenarios pass
+- [x] **US1 Tests**: `pnpm exec cucumber-js --config tests/acceptance/cucumber.js tests/acceptance/features/create-user.feature` → All 4 scenarios pass
+- [x] **US2 Tests**: `pnpm exec cucumber-js --config tests/acceptance/cucumber.js tests/acceptance/features/get-user.feature` → All 4 scenarios pass
+- [x] **US3 Tests**: `pnpm exec cucumber-js --config tests/acceptance/cucumber.js tests/acceptance/features/list-users.feature` → All 4 scenarios pass
+- [x] **US4 Tests**: `pnpm exec cucumber-js --config tests/acceptance/cucumber.js tests/acceptance/features/update-user.feature` → All 4 scenarios pass
+- [x] **US5 Tests**: `pnpm exec cucumber-js --config tests/acceptance/cucumber.js tests/acceptance/features/delete-user.feature` → All 4 scenarios pass
 
 ### Unit Test Coverage
 
