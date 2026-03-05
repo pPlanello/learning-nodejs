@@ -1,0 +1,497 @@
+openapi: 3.0.0
+info:
+  title: User CRUD API
+  version: 1.0.0
+  description: Complete REST API for User management with Create, Read, Update, Delete operations
+  contact:
+    name: Development Team
+    url: https://github.com/learning-nodejs
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development environment
+  - url: https://api.example.com/api/v1
+    description: Production environment
+
+paths:
+  /users:
+    post:
+      summary: Create a new entities
+      operationId: createUser
+      tags:
+        - Users
+      description: Creates a new entities account with the provided information. Email must be unique.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+            examples:
+              success:
+                summary: Valid entities creation
+                value:
+                  name: "John Doe"
+                  email: "john@example.com"
+                  password: "SecurePass123!"
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+              examples:
+                success:
+                  summary: Created entities
+                  value:
+                    id: "550e8400-e29b-41d4-a716-446655440000"
+                    name: "John Doe"
+                    email: "john@example.com"
+                    status: "active"
+                    createdAt: "2026-02-18T10:30:00Z"
+                    updatedAt: "2026-02-18T10:30:00Z"
+                    deletedAt: null
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      summary: List all users with pagination
+      operationId: getAllUsers
+      tags:
+        - Users
+      description: Retrieves all active users with pagination, filtering, and sorting support.
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number (1-indexed)
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          description: Number of users per page (max 100)
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - active
+              - suspended
+              - pending_verification
+          description: Filter by entities status
+        - name: sortBy
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - name
+              - email
+              - createdAt
+              - updatedAt
+            default: createdAt
+          description: Field to sort by
+        - name: sortOrder
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+          description: Sort order
+      responses:
+        '200':
+          description: Users retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllUsersResponse'
+              examples:
+                success:
+                  summary: Users list with pagination
+                  value:
+                    data:
+                      - id: "550e8400-e29b-41d4-a716-446655440000"
+                        name: "John Doe"
+                        email: "john@example.com"
+                        status: "active"
+                        createdAt: "2026-02-18T10:30:00Z"
+                        updatedAt: "2026-02-18T10:30:00Z"
+                        deletedAt: null
+                      - id: "550e8400-e29b-41d4-a716-446655440001"
+                        name: "Jane Smith"
+                        email: "jane@example.com"
+                        status: "active"
+                        createdAt: "2026-02-18T10:45:00Z"
+                        updatedAt: "2026-02-18T10:45:00Z"
+                        deletedAt: null
+                    total: 2
+                    page: 1
+                    limit: 10
+                    totalPages: 1
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/{id}:
+    get:
+      summary: Get a entities by ID
+      operationId: getUser
+      tags:
+        - Users
+      description: Retrieves a specific entities by their unique ID. Returns 404 if entities not found or is deleted.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: User ID (UUID)
+      responses:
+        '200':
+          description: User retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    patch:
+      summary: Update a entities
+      operationId: updateUser
+      tags:
+        - Users
+      description: Updates specific fields of an existing entities. Email must remain unique.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: User ID (UUID)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+            examples:
+              updateName:
+                summary: Update name only
+                value:
+                  name: "Jane Doe"
+              updateEmail:
+                summary: Update email only
+                value:
+                  email: "newemail@example.com"
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      summary: Delete a entities
+      operationId: deleteUser
+      tags:
+        - Users
+      description: Deletes (soft delete) a entities by marking as inactive. User data remains in database for audit purposes.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: User ID (UUID)
+      responses:
+        '204':
+          description: User deleted successfully (no content)
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    CreateUserRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: User's full name
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          minLength: 5
+          maxLength: 254
+          description: User's email address (must be unique)
+          example: "john@example.com"
+        password:
+          type: string
+          minLength: 8
+          description: User's password (min 8 chars, must include uppercase, lowercase, digit, special char)
+          example: "SecurePass123!"
+          pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{8,}$'
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: User's full name
+          example: "Jane Doe"
+        email:
+          type: string
+          format: email
+          minLength: 5
+          maxLength: 254
+          description: User's email address (must be unique)
+          example: "jane@example.com"
+        status:
+          type: string
+          enum:
+            - active
+            - suspended
+            - pending_verification
+          description: User account status
+          example: "active"
+
+    UserResponse:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - status
+        - createdAt
+        - updatedAt
+        - deletedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique entities identifier
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        name:
+          type: string
+          description: User's full name
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          description: User's email address
+          example: "john@example.com"
+        status:
+          type: string
+          enum:
+            - active
+            - suspended
+            - pending_verification
+          description: User account status
+          example: "active"
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time when entities was created (ISO 8601)
+          example: "2026-02-18T10:30:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Date and time of last modification (ISO 8601)
+          example: "2026-02-18T10:30:00Z"
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Date and time when entities was deleted (null if not deleted; ISO 8601)
+          example: null
+
+    GetAllUsersResponse:
+      type: object
+      required:
+        - data
+        - total
+        - page
+        - limit
+        - totalPages
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserResponse'
+          description: Array of entities objects
+        total:
+          type: integer
+          minimum: 0
+          description: Total number of users (excluding deleted)
+          example: 42
+        page:
+          type: integer
+          minimum: 1
+          description: Current page number
+          example: 1
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Users per page
+          example: 10
+        totalPages:
+          type: integer
+          minimum: 0
+          description: Total number of pages
+          example: 5
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+        - statusCode
+      properties:
+        error:
+          type: string
+          description: Error type/code
+          example: "UserNotFound"
+        message:
+          type: string
+          description: Human-readable error message (no stack traces)
+          example: "User with ID 550e8400-e29b-41d4-a716-446655440000 not found"
+        statusCode:
+          type: integer
+          description: HTTP status code
+          example: 404
+        timestamp:
+          type: string
+          format: date-time
+          description: When error occurred (ISO 8601)
+          example: "2026-02-18T10:30:00Z"
+        traceId:
+          type: string
+          description: Request trace ID for debugging
+          example: "f2e0f3a1-2b3c-4d5e-6f7g-8h9i0j1k2l3m"
+
+  responses:
+    BadRequest:
+      description: Bad Request - Invalid input parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            invalidEmail:
+              summary: Invalid email format
+              value:
+                error: "InvalidEmailFormat"
+                message: "Email format invalid: invalid-email"
+                statusCode: 400
+                timestamp: "2026-02-18T10:30:00Z"
+                traceId: "f2e0f3a1-2b3c-4d5e-6f7g-8h9i0j1k2l3m"
+            weakPassword:
+              summary: Password does not meet strength requirements
+              value:
+                error: "WeakPassword"
+                message: "Password must be at least 8 characters with uppercase, lowercase, digit, and special character"
+                statusCode: 400
+                timestamp: "2026-02-18T10:30:00Z"
+                traceId: "f2e0f3a1-2b3c-4d5e-6f7g-8h9i0j1k2l3m"
+
+    Conflict:
+      description: Conflict - Resource constraint violation (e.g., duplicate email)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            duplicateEmail:
+              summary: Email already exists
+              value:
+                error: "DuplicateEmail"
+                message: "User with email john@example.com already exists"
+                statusCode: 409
+                timestamp: "2026-02-18T10:30:00Z"
+                traceId: "f2e0f3a1-2b3c-4d5e-6f7g-8h9i0j1k2l3m"
+
+    NotFound:
+      description: Not Found - Requested resource doesn't exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            userNotFound:
+              summary: User not found
+              value:
+                error: "UserNotFound"
+                message: "User with ID 550e8400-e29b-41d4-a716-446655440000 not found"
+                statusCode: 404
+                timestamp: "2026-02-18T10:30:00Z"
+                traceId: "f2e0f3a1-2b3c-4d5e-6f7g-8h9i0j1k2l3m"
+
+    InternalServerError:
+      description: Internal Server Error - Server-side error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            serverError:
+              summary: Internal server error
+              value:
+                error: "InternalServerError"
+                message: "An unexpected error occurred. Please contact support."
+                statusCode: 500
+                timestamp: "2026-02-18T10:30:00Z"
+                traceId: "f2e0f3a1-2b3c-4d5e-6f7g-8h9i0j1k2l3m"
+
+tags:
+  - name: Users
+    description: User CRUD operations

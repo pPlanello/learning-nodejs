@@ -5,15 +5,15 @@
 ### 1. Hexagonal Architecture
 Strict Hexagonal Isolation:
     
-* **Domain:**
-    * *Responsability:* Business Logic, Entities, Value Objects, Domain Exceptions.
+* **domain:**
+    * *Responsability:* Business Logic, Entities, Value Objects, domain Exceptions.
     * *Constraints:* Zero Dependencies. No Express, No TypeORM, No libraries except internal logic.
-* **Application:**
+* **application:**
     * *Responsability:* Use Cases, Orchestration, Input/Output Ports (Interfaces).
-    * *Constraints:* Depends only on Domain. No knowledge of HTTP or Databases.
-* **Infrastructure:**
+    * *Constraints:* Depends only on domain. No knowledge of HTTP or Databases.
+* **infrastructure:**
     * *Responsability:* Adapters (Express, Postgres, Redis, External APIs).
-    * *Constraints:* Depends on Application and Domain. Implements Domain Interfaces.
+    * *Constraints:* Depends on application and domain. Implements domain Interfaces.
 
 **Strict Rule:** Any import of infrastructure/ inside domain/ or application/ is a violation and must be rejected.
 
@@ -26,23 +26,22 @@ We follow the Red-Green-Refactor cycle at two levels:
 
 ### 3. Coding Standards & Clean Code
 * **Ubiquitous Language:** Use the same terms in the code as used in the .feature files (e.g., if the spec says "Subscriber," don't call the class User).
-* **File Naming:** kebab-case.ts.
-* **Class Naming:** PascalCase.
-* **Function Naming:** camelCase.
-* **Side Effects:** Functions must be small and do one thing. If a function contains "And" in its description, it should probably be split.
-* **Naming Conventions**
+* **Folder Naming:** kebab-case.ts
+* **File Naming:** kebab-case.ts (e.g., user-repository.ts).
+* **Class Naming Conventions:** PascalCase
     * *Interfaces:* Prefixed with I (e.g., IUserRepository) or named as Ports (e.g., UserReader).
     * *Use Cases:* Named as actions (e.g., CreateUserUseCase.ts).
-    * *Files:* Kebab-case (e.g., user-repository.ts).
-* **Error Handling:** Domain exceptions must be thrown in the Domain layer.
-* **The Infrastructure layer (Adapters):** is responsible for mapping Domain Exceptions to HTTP Status Codes (e.g., UserNotFoundException -> 404 Not Found).
-* **Data Flow:** Use Data Transfer Objects (DTOs) to pass data from Infrastructure to Application.
-* **Never expose Domain Entities** directly via API responses; map them to public schemas/JSON first.
+* **Function Naming:** camelCase.
+* **Side Effects:** Functions must be small and do one thing. If a function contains "And" in its description, it should probably be split.
+* **Error Handling:** domain exceptions must be thrown in the domain layer.
+* **The infrastructure layer (Adapters):** is responsible for mapping domain Exceptions to HTTP Status Codes (e.g., UserNotFoundException -> 404 Not Found).
+* **Data Flow:** Use Data Transfer Objects (DTOs) to pass data from infrastructure to application.
+* **Never expose domain Entities** directly via API responses; map them to public schemas/JSON first.
 
 ### 4. Security & Governance
 * **Secrets:** Never hardcode credentials. Use .env with validation (e.g., dotenv-safe).
 * **Errors:** Never leak stack traces to the end user. Map internal errors to standardized HTTP status codes in the Primary Adapters.
-* **Validation:** Input validation must happen at the edge (Infrastructure) via DTOs and inside the Domain (Value Objects).
+* **Validation:** Input validation must happen at the edge (infrastructure) via DTOs and inside the domain (Value Objects).
 
 ### 5. Documentation API
 * API documentation MUST include: endpoints, request/response schemas, status codes, error formats
@@ -63,7 +62,7 @@ We follow the Red-Green-Refactor cycle at two levels:
 * **Testing:**
   * **BDD/E2E:** Cucumber + Supertest + Chai
   * **TDD/Unit:** Jest
-* **Architecture:** Hexagonal (Application, Domain, Infrastructure)
+* **Architecture:** Hexagonal (application, domain, Infrastructure)
 * **Tracing Log:** Pino 
 * **Code Quality:** Prettier + ESLint
 * **Documentation API:** OpenAPI/Swagger UI
@@ -78,8 +77,8 @@ We follow the Red-Green-Refactor cycle at two levels:
 **Feature Development Process:**
 1. Define requirements in `.specify/features/*.md` using Gherkin-style scenarios.
 2. Sync: Run pnpm run specs:generate to update the living documentation.
-3. Write a failing E2E test in `acceptance-test/features/`
-4. Implement a scenario in `acceptance-test/step_definitions`.
+3. Write a failing E2E test in `tests/acceptance/features/`.
+4. Implement a scenario in `tests/acceptance/step-definitions/`.
 5. Write failing unit tests in tests/domain/ and tests/application/.
 6. Implement the minimum code in `src/` to pass tests in domain and application logic.
 7. Implement the minimum code in `src/infrastructure` to pass acceptance test.
